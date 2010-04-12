@@ -1,0 +1,10 @@
+= Redmine Issue Extensions Plugin
+
+This is a plugin for Redmine
+
+=== Plugin installation
+
+1. Copy the plugin directory into the vendor/plugins directory
+
+2. Start Redmine
+
