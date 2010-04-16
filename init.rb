@@ -21,7 +21,7 @@ Redmine::Plugin.register :redmine_issue_extensions do
   name 'Redmine Issue Extensions plugin'
   author 'Takashi Takebayashi'
   description 'This is a Issue Extensions plugin for Redmine'
-  version '0.0.1'
+  version '0.0.1.1'
   requires_redmine :version_or_higher => '0.9.0'
 
 end
