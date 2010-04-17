@@ -22,14 +22,16 @@ class IssueExtensionsIssueHook < Redmine::Hook::Listener
 private
   # チケットに担当者が設定されている && 状態が新規の場合、担当に変更する
   def issue_status_assigned(context)
-    @issue = context[:issue]
-    @issue_status_default = IssueStatus.find(:first, :conditions => ["name = (?)", '新規'])
-    @issue_status_assigned = IssueStatus.find(:first, :conditions => ["name = (?)", '担当'])
+    issue = context[:issue]
+    project = Project.find(issue[:project_id].to_i)
+    exe_flg = project.module_enabled?(:issue_extensions)
+    issue_status_default = IssueStatus.find(:first, :conditions => ["name = (?)", '新規'])
+    issue_status_assigned = IssueStatus.find(:first, :conditions => ["name = (?)", '担当'])
 
-    if (@issue[:assigned_to_id] != nil && @issue_status_default != nil && @issue_status_assigned != nil)
-      if (@issue_status_default.id == @issue[:status_id].to_i)
-        @issue[:status_id] = @issue_status_assigned.id.to_s
-        context[:issue] = @issue
+    if (exe_flg != nil && issue[:assigned_to_id] != nil && issue_status_default != nil && issue_status_assigned != nil)
+      if (issue_status_default.id == issue[:status_id].to_i)
+        issue[:status_id] = issue_status_assigned.id.to_s
+        context[:issue] = issue
       end
     end
   end

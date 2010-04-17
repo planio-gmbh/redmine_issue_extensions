@@ -24,4 +24,7 @@ Redmine::Plugin.register :redmine_issue_extensions do
   version '0.0.1.1'
   requires_redmine :version_or_higher => '0.9.0'
 
+  project_module :issue_extensions do
+    permission :run_auto_change_issue_status_assigned, {:issues => [:edit, :reply, :bulk_edit, :update_form]}
+  end
 end
