@@ -32,12 +32,10 @@ private
     issue_status_default = IssueStatus.find(:first, :conditions => ["name = (?)", '新規'])
     issue_status_assigned = IssueStatus.find(:first, :conditions => ["name = (?)", '担当'])
 
-    if (issue[:assigned_to_id] != nil && issue_status_default != nil && issue_status_assigned != nil)
-      if (issue_status_default.id == issue[:status_id].to_i)
+    if (issue_status_default.id == issue[:status_id].to_i)
         issue[:status_id] = issue_status_assigned.id.to_s
         context[:issue] = issue
-      end
-    end
+      end if (issue[:assigned_to_id] != nil && issue_status_default != nil && issue_status_assigned != nil)
   end
 
   # チケットがクローズされている場合、進捗を100%に変更する
