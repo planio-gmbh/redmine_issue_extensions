@@ -17,6 +17,7 @@
 class IssueExtensionsIssueHook < Redmine::Hook::Listener
   def controller_issues_edit_before_save(context)
     issue_status_assigned(context)
+    issue_status_closed(context)
   end
 
 private
@@ -32,6 +33,25 @@ private
       if (issue_status_default.id == issue[:status_id].to_i)
         issue[:status_id] = issue_status_assigned.id.to_s
         context[:issue] = issue
+      end
+    end
+  end
+
+  # チケットがクローズされている場合、進捗を100%に変更する
+  def issue_status_closed(context)
+    issue = context[:issue]
+    project = Project.find(issue[:project_id].to_i)
+    exe_flg = project.module_enabled?(:issue_extensions)
+    issue_status_closed = IssueStatus.find(:all, :conditions =>["is_closed = (?)", true])
+
+    if (exe_flg != nil)
+      unless issue_status_closed.length == 0
+        issue_status_closed.each {|closed|
+          if (closed.id == issue[:status_id].to_i)
+            issue[:done_ratio] = 100
+            context[:issue] = issue
+          end
+        }
       end
     end
   end
