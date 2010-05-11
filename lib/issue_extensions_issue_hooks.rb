@@ -18,10 +18,10 @@ class IssueExtensionsIssueHook < Redmine::Hook::Listener
   def controller_issues_edit_before_save(context)
     issue = context[:issue]
     project = Project.find(issue[:project_id].to_i)
-    exe_flg = project.module_enabled?(:issue_extensions)
-    unless (exe_flg == nil)
+    unless (project.module_enabled?(:issue_extensions) == nil)
       issue_status_assigned(context)
       issue_status_closed(context)
+      issue_updated(context)
     end
   end
 
@@ -44,10 +44,25 @@ private
     issue_status_closed = IssueStatus.find(:all, :conditions =>["is_closed = (?)", true])
 
     issue_status_closed.each {|closed|
-        if (closed.id == issue[:status_id].to_i)
-          issue[:done_ratio] = 100
-          context[:issue] = issue
-        end
-      } unless issue_status_closed.length == 0
+      if (closed.id == issue[:status_id].to_i && issue[:done_ratio] != 100)
+        issue[:done_ratio] = 100
+        context[:issue] = issue
+      end
+    } unless issue_status_closed.length == 0
+  end
+
+  # チケットを更新した場合、更新者をウォッチャーに追加する
+  def issue_updated(context)
+    issue = context[:issue]
+    journal = context[:journal]
+
+    if (Watcher.find(:first, :conditions =>["watchable_type = (?) and watchable_id = (?) and user_id = (?)", journal[:journalized_type], issue[:id].to_i, journal[:user_id].to_i]) == nil)
+      hash_watcher = HashWithIndifferentAccess.new
+      hash_watcher[:user_id]  = journal[:user_id].to_s
+      watcher = Watcher.new(hash_watcher)
+      watcher.watchable_type  = journal[:journalized_type].to_s
+      watcher.watchable_id    = issue[:id].to_i
+      watcher.save
+    end
   end
 end
