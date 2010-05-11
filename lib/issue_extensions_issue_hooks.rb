@@ -45,13 +45,11 @@ private
     issue = context[:issue]
     issue_status_closed = IssueStatus.find(:all, :conditions =>["is_closed = (?)", true])
 
-    unless issue_status_closed.length == 0
-      issue_status_closed.each {|closed|
+    issue_status_closed.each {|closed|
         if (closed.id == issue[:status_id].to_i)
           issue[:done_ratio] = 100
           context[:issue] = issue
         end
-      }
-    end
+      } unless issue_status_closed.length == 0
   end
 end
