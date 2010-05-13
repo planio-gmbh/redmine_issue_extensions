@@ -1,10 +1,19 @@
 = Redmine Issue Extensions Plugin
 
-This is a plugin for Redmine
+これは Redmine の為のプラグインです。
 
-=== Plugin installation
+=== 機能
 
-1. Copy the plugin directory into the vendor/plugins directory
+1.  チケット更新時、チケットに担当者が設定されている && チケットの状態が'新規'の場合、チケットの状態を'担当'に変更します。
 
-2. Start Redmine
+2.  チケット更新時、チケットの状態がクローズされている場合、進捗を100%に変更します。
 
+3.  チケット更新時、チケットの更新したユーザをウォッチャーに追加します。
+
+=== プラグインをインストールする
+
+1. プラグインを vendor/plugins ディレクトリにコピーします。
+
+2. Redmine を起動させます。
+
+3. プロジェクトの設定ページのモジュールにて、Issue Extensions をチェックし、保存します。
