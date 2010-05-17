@@ -17,3 +17,7 @@ This is a plugin for Redmine
 2. Start Redmine
 
 3. Add Issue Extensions module into your project.
+
+=== Note
+
+1. This plugin works only Redmine 0.9.0 or higher.
