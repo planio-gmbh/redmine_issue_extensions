@@ -1,5 +1,7 @@
 # English strings go here for Rails i18n
 en:
+  issue_extensions: Issue Extensions
+
   permission_run_auto_change_issue_status_assigned: Run auto change issue status assigned
 
-  project_module_issue_extensions: Issue extensions
+  project_module_issue_extensions: Issue Extensions

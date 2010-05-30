@@ -1,6 +1,7 @@
 # Japanese strings go here for Rails i18n
 ja:
+  issue_extensions: Issue Extensions
+
   permission_run_auto_change_issue_status_assigned: チケット状態自動変更(デフォルト -> アサイン)
 
-  project_module_issue_extensions: Issue extensions
-
+  project_module_issue_extensions: Issue Extensions
