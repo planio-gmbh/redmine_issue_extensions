@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 require 'redmine'
 require 'issue_extensions_issue_hooks'
+require 'issue_extensions_issue_patch'
 
 Redmine::Plugin.register :redmine_issue_extensions do
   name 'Redmine Issue Extensions plugin'
