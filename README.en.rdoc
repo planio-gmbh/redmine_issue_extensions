@@ -20,4 +20,4 @@ This is a plugin for Redmine
 
 === Note
 
-1. This plugin works only Redmine 0.9.0 or higher.
+1. This plugin works only Redmine 0.9.0 or higher and production mode(config.cache_classes = true).
