@@ -29,6 +29,7 @@ module IssueExtensionsIssuePatch
   end
 
   module InstanceMethods
+    # トラッカーがバグ、ステータスが終了のチケットに対象バージョンが入力されていない場合はエラーにする
     def validate_with_issue_extensions
       validate_without_issue_extensions
       project = Project.find read_attribute :project_id
