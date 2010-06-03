@@ -17,7 +17,7 @@
 require_dependency 'issue'
 
 module IssueExtensionsIssuePatch
-  def self.included base
+  def self.included base # :nodoc:
     base.extend ClassMethods
     base.send :include, InstanceMethods
     base.class_eval do
@@ -31,10 +31,6 @@ module IssueExtensionsIssuePatch
   module InstanceMethods
     def validate_with_issue_extensions
       validate_without_issue_extensions
-      p "read_attribute(:id).to_s: " + read_attribute(:id).to_s
-      p "read_attribute(:project_id).to_s: " + read_attribute(:project_id).to_s
-      p "read_attribute(:tracker_id).to_s: " + read_attribute(:tracker_id).to_s
-      p "read_attribute(:status_id).to_s: " + read_attribute(:status_id).to_s
       project = Project.find read_attribute :project_id
       unless project.module_enabled? :issue_extensions == nil
         tracker = Tracker.find :first, :conditions => ["name = (?)", 'バグ']
