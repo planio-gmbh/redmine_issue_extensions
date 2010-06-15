@@ -14,20 +14,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-require 'redmine'
-require 'issue_extensions_issue_hooks'
-require 'issue_extensions_issue_patch'
-require 'issue_extensions_projects_helper_patch'
+class IssueExtensionsSettingsController < ApplicationController
+  # A copy of ApplicationController has been removed from the module tree but is still active!対策
+  unloadable
+  # アクションが呼ばれる前に呼ぶメソッド
+  before_filter :find_project, :find_user, :authorize
 
-Redmine::Plugin.register :redmine_issue_extensions do
-  name 'Redmine Issue Extensions plugin'
-  author 'Takashi Takebayashi'
-  url "http://www.r-labs.org/projects/show/issueext" if respond_to?(:url)
-  description 'This is a Issue Extensions plugin for Redmine'
-  version '0.0.2'
-  requires_redmine :version_or_higher => '0.9.0'
+  def update
+  end
 
-  project_module :issue_extensions do
-    permission :manage_issue_extensions, {:issue_extensions_settings => [:show, :update]}, :require => :member
+  private
+  # プロジェクト情報を取得する。
+  # タブ消滅対策
+  def find_project
+    @project = Project.find(params[:id])
+  end
+
+  # ユーザ情報を取得する。
+  def find_user
+    @user = User.current
   end
 end

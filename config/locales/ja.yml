@@ -2,6 +2,6 @@
 ja:
   issue_extensions: Issue Extensions
 
-  permission_run_auto_change_issue_status_assigned: チケット状態自動変更(デフォルト -> アサイン)
+  permission_manage_issue_extensions: Issue Extensionsの管理
 
   project_module_issue_extensions: Issue Extensions

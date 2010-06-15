@@ -2,6 +2,6 @@
 en:
   issue_extensions: Issue Extensions
 
-  permission_run_auto_change_issue_status_assigned: Run auto change issue status assigned
+  permission_manage_issue_extensions: Manage Issue Extensions
 
   project_module_issue_extensions: Issue Extensions
