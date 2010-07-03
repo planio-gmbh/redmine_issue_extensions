@@ -2,6 +2,11 @@
 ja:
   issue_extensions: Issue Extensions
 
+  field_old_status: 遷移元のステータス
+  field_new_status: 遷移先のステータス
+
   permission_manage_issue_extensions: Issue Extensionsの管理
 
   project_module_issue_extensions: Issue Extensions
+
+  text_select_status_for_old_and_new: 遷移元と遷移先のステータスを選択してください。

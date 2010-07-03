@@ -16,4 +16,21 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -%>
-Issue Extension Settings
+<div id="issue_extension_settings">
+<%
+@issue_extension_status_flow = IssueExtensionsStatusFlow.find_or_create(@project.id, User.current.id)
+@statuses = IssueStatus.find(:all, :order => 'position') %>
+<% labelled_tabular_form_for :setting, @issue_extension_status_flow,
+                             :url => {:controller => 'issue_extensions_settings',
+                             :action => 'update', :id => @project, :tab => 'issue_extensions',
+                             :partial => 'issue_extensions_settings/update',
+                             :setting_id => @issue_extension_status_flow.id} do |f| %>
+    <%= error_messages_for 'issue_extensions_setting' %>
+    <div class="box">
+      <b><%= h l(:text_select_status_for_old_and_new) %>:</b>
+      <p><%= f.select :old_status_id, @statuses.collect {|status| [status.name, status.id]}, :required => true %></p>
+      <p><%= f.select :new_status_id, @statuses.collect {|status| [status.name, status.id]}, :required => true %></p>
+    </div>
+    <%= submit_tag l(:button_update) %>
+<% end %>
+</div>

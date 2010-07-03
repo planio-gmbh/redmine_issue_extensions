@@ -2,6 +2,11 @@
 en:
   issue_extensions: Issue Extensions
 
+  field_old_status: Current status
+  field_new_status: New statuses allowed
+
   permission_manage_issue_extensions: Manage Issue Extensions
 
   project_module_issue_extensions: Issue Extensions
+
+  text_select_status_for_old_and_new: Please select the status for old and new.
