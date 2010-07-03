@@ -21,6 +21,12 @@ class IssueExtensionsSettingsController < ApplicationController
   before_filter :find_project, :find_user, :authorize
 
   def update
+    @issue_extension_status_flow = IssueExtensionsStatusFlow.find_or_create(@project.id, @user.id)
+    @issue_extension_status_flow.attributes = params[:setting]
+    @issue_extension_status_flow.updated_by = @user.id
+    @issue_extension_status_flow.save!
+    flash[:notice] = l(:notice_successful_update)
+    redirect_to :controller => 'projects', :action => "settings", :id => @project, :tab => 'issue_extensions'
   end
 
   private
