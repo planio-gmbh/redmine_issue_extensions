@@ -4,7 +4,7 @@ This is a plugin for Redmine
 
 === Function
 
-1.  When the issue is edited, the person in charge is set to the issue, and the state of the issue is changed to '担当' if the state of the issue is '新規', except when the issue bulk edit.
+1.  When the issue is edited, the person in charge is set to the issue, and the state of the issue is changed to new status if the state of the issue is old status, except when the issue bulk edit.
 
 2.  When the issue is edited, issue is closed, the progress rate is changed to 100%.
 
