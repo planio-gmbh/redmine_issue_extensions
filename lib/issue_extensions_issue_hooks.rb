@@ -46,6 +46,29 @@ class IssueExtensionsIssueHook < Redmine::Hook::Listener
     end
   end
 
+  def view_issues_show_description_bottom(context)
+    issue = context[:issue]
+    project = context[:project]
+    return '' unless project
+    unless (project.module_enabled?(:issue_extensions) == nil)
+      begin
+        output = "<hr />\n"
+        output << "<div id=\"issue_extensions_relations\">\n"
+#        output << link_to_if_authorized(l(:button_add_relation_issue), {:controller => 'issue_extensions', :action => 'add_relation_issue', :id => @issue}, :class => 'icon icon-move')
+#        output << link_to("このチケットに関連するチケットを作る", {:controller => 'issue_extensions', :action => 'add_relation_issue', :id => issue.id})
+        output << "  <a href=\"sample\">このチケットに関連するチケットを作る</a>"
+        output << "</div>\n"
+        return output
+      rescue
+        output = "<hr />\n"
+        output << "<div id=\"issue_extensions_relations\">\n"
+        output << "  error!!\n"
+        output << "</div>\n"
+        return output
+      end
+    end
+  end
+
   private
   # チケットに担当者が設定されている && 状態が新規の場合、担当に変更する
   def issue_status_assigned(context)
