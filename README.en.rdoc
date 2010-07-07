@@ -14,9 +14,15 @@ This is a plugin for Redmine
 
 1. Copy the plugin directory into the vendor/plugins directory
 
-2. Start Redmine
+2. Migrate plugin: rake db:migrate_plugins RAILS_ENV=production
 
-3. Add Issue Extensions module into your project.
+3. Start Redmine
+
+4. Enable the permission on the role and permissions setting page.
+
+5. Enable the module on the project setting page.
+
+6. Goto Issue Extensions setting tab and select the status for old and new.
 
 === Note
 

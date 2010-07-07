@@ -14,9 +14,15 @@
 
 1. プラグインを vendor/plugins ディレクトリにコピーします。
 
-2. Redmine を起動させます。
+2. rake db:migrate_plugins RAILS_ENV=production を実行します。
 
-3. プロジェクトの設定ページのモジュールにて、Issue Extensions をチェックし、保存します。
+3. Redmine を起動させます。
+
+4. 「ロールと権限」で Issue Extensions の権限設定をします。
+
+5. プロジェクトの設定ページのモジュールにて、Issue Extensions をチェックし、保存します。
+
+6. プロジェクトの設定ページの Issue Extensions タブを開き、遷移元/遷移先に割り当てるステータスを選択します。
 
 === 注意
 
