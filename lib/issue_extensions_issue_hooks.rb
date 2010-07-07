@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-class IssueExtensionsIssueHook < Redmine::Hook::Listener
+class IssueExtensionsIssueHooks < Redmine::Hook::Listener
 #  def controller_issues_new_before_save(context)
 #    issue = context[:issue]
 #    project = Project.find(issue[:project_id].to_i)
@@ -43,29 +43,6 @@ class IssueExtensionsIssueHook < Redmine::Hook::Listener
       issue[:status_id] = params[:status_id].blank? ? issue[:status_id] : params[:status_id]
       context[:issue] = issue
       issue_status_closed(context)
-    end
-  end
-
-  def view_issues_show_description_bottom(context)
-    issue = context[:issue]
-    project = context[:project]
-    return '' unless project
-    unless (project.module_enabled?(:issue_extensions) == nil)
-      begin
-        output = "<hr />\n"
-        output << "<div id=\"issue_extensions_relations\">\n"
-#        output << link_to_if_authorized(l(:button_add_relation_issue), {:controller => 'issue_extensions', :action => 'add_relation_issue', :id => @issue}, :class => 'icon icon-move')
-#        output << link_to("このチケットに関連するチケットを作る", {:controller => 'issue_extensions', :action => 'add_relation_issue', :id => issue.id})
-        output << "  <a href=\"sample\">このチケットに関連するチケットを作る</a>"
-        output << "</div>\n"
-        return output
-      rescue
-        output = "<hr />\n"
-        output << "<div id=\"issue_extensions_relations\">\n"
-        output << "  error!!\n"
-        output << "</div>\n"
-        return output
-      end
     end
   end
 
@@ -107,5 +84,29 @@ class IssueExtensionsIssueHook < Redmine::Hook::Listener
         watcher.watchable_id    = issue[:id].to_i
         watcher.save
       end if (journal != nil && journal[:journalized_type] != nil && issue[:id] != nil && journal[:user_id] != nil)
+  end
+
+  class IssueExtensionsIssueViewListener < Redmine::Hook::ViewListener
+    def view_issues_show_description_bottom(context)
+      issue = context[:issue]
+      project = context[:project]
+      return '' unless project
+      unless (project.module_enabled?(:issue_extensions) == nil)
+        begin
+          output = "<hr />\n"
+          output << "<div id=\"issue_extensions_relations\">\n"
+#          output << link_to_if_authorized(l(:button_add_relation_issue), {:controller => 'issue_extensions', :action => 'add_relation_issue', :id => @issue}, :class => 'icon icon-move')
+          output << "  " + link_to(l(:label_add_relation_issue), {:controller => 'issue_extensions', :action => 'add_relation_issue', :id => issue.id})
+          output << "</div>\n"
+          return output
+        rescue
+          output = "<hr />\n"
+          output << "<div id=\"issue_extensions_relations\">\n"
+          output << "  error!!\n"
+          output << "</div>\n"
+          return output
+        end
+      end
+    end
   end
 end

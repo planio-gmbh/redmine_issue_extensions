@@ -5,6 +5,8 @@ en:
   field_old_status: Current status
   field_new_status: New statuses allowed
 
+  label_add_relation_issue: Add Related this issue
+
   permission_manage_issue_extensions: Manage Issue Extensions
 
   project_module_issue_extensions: Issue Extensions

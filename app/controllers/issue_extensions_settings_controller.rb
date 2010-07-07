@@ -29,6 +29,10 @@ class IssueExtensionsSettingsController < ApplicationController
     redirect_to :controller => 'projects', :action => "settings", :id => @project, :tab => 'issue_extensions'
   end
 
+  def add_relation_issue
+
+  end
+
   private
   # プロジェクト情報を取得する。
   # タブ消滅対策
