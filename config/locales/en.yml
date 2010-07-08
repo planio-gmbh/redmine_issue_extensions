@@ -2,8 +2,8 @@
 en:
   issue_extensions: Issue Extensions
 
-  field_old_status: Current status
-  field_new_status: New statuses allowed
+  field_old_status: Alpha
+  field_new_status: Beta
 
   label_add_relation_issue: Add Related this issue
 
@@ -11,4 +11,4 @@ en:
 
   project_module_issue_extensions: Issue Extensions
 
-  text_select_status_for_old_and_new: Please select the status for old and new.
+  text_changed_from_the_alpha_to_the_beta: When assigned to the person is set, status is automatically changed from the [ alpha ] to the [ beta ].

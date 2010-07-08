@@ -27,7 +27,7 @@
                              :setting_id => @issue_extension_status_flow.id} do |f| %>
     <%= error_messages_for 'issue_extensions_setting' %>
     <div class="box">
-      <b><%= h l(:text_select_status_for_old_and_new) %>:</b>
+      <b><%= h l(:text_changed_from_the_alpha_to_the_beta) %></b>
       <p><%= f.select :old_status_id, @statuses.collect {|status| [status.name, status.id]}, :required => true %></p>
       <p><%= f.select :new_status_id, @statuses.collect {|status| [status.name, status.id]}, :required => true %></p>
     </div>

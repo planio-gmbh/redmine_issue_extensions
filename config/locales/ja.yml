@@ -2,8 +2,8 @@
 ja:
   issue_extensions: Issue Extensions
 
-  field_old_status: 遷移元のステータス
-  field_new_status: 遷移先のステータス
+  field_old_status: α
+  field_new_status: β
 
   label_add_relation_issue: このチケットに関連するチケットを作成する。
 
@@ -11,4 +11,4 @@ ja:
 
   project_module_issue_extensions: Issue Extensions
 
-  text_select_status_for_old_and_new: 遷移元と遷移先のステータスを選択してください。
+  text_changed_from_the_alpha_to_the_beta: ステータスが[ α ]のチケットに担当者を設定すると自動的に[ β ]に変更します。
