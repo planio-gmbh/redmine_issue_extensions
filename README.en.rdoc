@@ -22,7 +22,7 @@ This is a plugin for Redmine
 
 5. Enable the module on the project setting page.
 
-6. Goto Issue Extensions setting tab and select the status for old and new.
+6. Goto Issue Extensions setting tab and select the status.
 
 === Note
 
