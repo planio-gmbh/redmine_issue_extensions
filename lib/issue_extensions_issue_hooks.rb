@@ -99,11 +99,14 @@ class IssueExtensionsIssueHooks < Redmine::Hook::Listener
    issue = context[:issue]
    params = context[:params]
    unless params[:relation_issue_id] == nil
-     relation = IssueRelation.new
-     relation.relation_type = IssueRelation::TYPE_RELATES
-     relation.issue_from_id = params[:relation_issue_id]
-     relation.issue_to_id = issue.id
-     relation.save!
+     from_issue = Issue.find :first, :conditions =>["id = (?)", params[:relation_issue_id].to_i]
+     unless from_issue == nil
+       relation = IssueRelation.new
+       relation.relation_type = IssueRelation::TYPE_RELATES
+       relation.issue_from_id = params[:relation_issue_id]
+       relation.issue_to_id = issue.id
+       relation.save!
+     end
    end
  end
 
