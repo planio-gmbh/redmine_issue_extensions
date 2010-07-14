@@ -24,7 +24,7 @@ Redmine::Plugin.register :redmine_issue_extensions do
   author 'Takashi Takebayashi'
   url "http://www.r-labs.org/projects/show/issueext" if respond_to?(:url)
   description 'This is a Issue Extensions plugin for Redmine'
-  version '0.0.3.1'
+  version '0.0.4'
   requires_redmine :version_or_higher => '0.9.0'
 
   project_module :issue_extensions do

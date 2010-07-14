@@ -4,11 +4,13 @@ This is a plugin for Redmine
 
 === Function
 
-1.  When the issue is edited, assigned to the person is set to the issue, and the state of the issue is changed to entry beta status if the state of the issue is entry alpha status, except when the issue bulk edit.
+1. When the issue is edited, assigned to the person is set to the issue, and the state of the issue is changed to entry beta status if the state of the issue is entry alpha status, except when the issue bulk edit.
 
-2.  When the issue is edited, issue is closed, the progress rate is changed to 100%.
+2. When the issue is edited, issue is closed, the progress rate is changed to 100%.
 
-3.  When the issue is edited, those who edit it about the issue are added to the watcher of the issue, except when the issue bulk edit.
+3. When the issue is edited, those who edit it about the issue are added to the watcher of the issue, except when the issue bulk edit.
+
+4. The relating issues can be easily made.
 
 === Plugin installation
 
