@@ -49,4 +49,15 @@ class IssueExtensionsSettingsControllerTest < ActionController::TestCase
     get :update, :id => 1
     assert_response 302
   end
+
+  # 認定ユーザの update アクション
+  test "update authorized user" do
+    @request.session[:user_id] = 1
+    status_flow = IssueExtensionsStatusFlow.find_or_create 1, 1
+
+    post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
+    assert_response :redirect
+    project = Project.find(1)
+    assert_redirected_to :controller => 'projects', :action => 'settings', :id => project, :tab => 'issue_extensions'
+  end
 end
