@@ -25,18 +25,11 @@ class IssueExtensionsSettingsControllerTest < ActionController::TestCase
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
     @request.env["HTTP_REFERER"] = '/'
-    enabled_module = EnabledModule.new
-    enabled_module.project_id = 1
-    enabled_module.name = 'issue_extensions'
-    enabled_module.save
 
-    enabled_module = EnabledModule.new
-    enabled_module.project_id = 2
-    enabled_module.name = 'issue_extensions'
-    enabled_module.save
+    EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
 
     User.current = nil
-    roles = Role.find(:all)
+    roles = Role.find :all
     roles.each {|role|
       role.permissions << :manage_issue_extensions
       role.save
