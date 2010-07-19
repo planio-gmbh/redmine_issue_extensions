@@ -53,7 +53,7 @@ class IssueExtensionsSettingsControllerTest < ActionController::TestCase
   # 認定ユーザの update アクション
   test "update authorized user" do
     @request.session[:user_id] = 1
-    status_flow = IssueExtensionsStatusFlow.find_or_create 1, 1
+    IssueExtensionsStatusFlow.find_or_create 1, 1
 
     post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
     assert_response :redirect
