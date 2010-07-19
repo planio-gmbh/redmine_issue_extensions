@@ -53,10 +53,17 @@ class IssuesControllerTest < ActionController::TestCase
     }
   end
 
-  # new アクション
-  test "new" do
+  # original new アクション
+  test "new original" do
     @request.session[:user_id] = 1
     get :new, :project_id => 1
+    assert_response :success
+  end
+
+  # Issue Extensions new アクション
+  test "new Issue Extensions" do
+    @request.session[:user_id] = 1
+    get :new, :project_id => 1, :relation_issue => 1
     assert_response :success
   end
 end
