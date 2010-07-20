@@ -60,14 +60,25 @@ class IssuesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  # Issue Extensions new アクション
-  test "new Issue Extensions" do
+  # Issue Extensions success new アクション
+  test "new Issue Extensions success" do
     @request.session[:user_id] = 1
     get :new, :project_id => 1, :relation_issue => 1
     assert_response :success
     post :new, :project_id => 1,
       :issue => {:tracker_id => 1, :status_id => 1, :subject => 'test issue001'},
       :relation_issue_id => 1
+    assert_response :redirect
+  end
+
+  # Issue Extensions invalid issue id new アクション
+  test "new Issue Extensions invalid issue id" do
+    @request.session[:user_id] = 1
+    get :new, :project_id => 1, :relation_issue => 100
+    assert_response :success
+    post :new, :project_id => 1,
+      :issue => {:tracker_id => 1, :status_id => 1, :subject => 'test issue002'},
+      :relation_issue_id => 100
     assert_response :redirect
   end
 end
