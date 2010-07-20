@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 class IssueExtensionsStatusFlowTest < ActiveSupport::TestCase
   fixtures :issue_extensions_status_flows
 
-  test "issue_extensions_status_flows_should_return_nil" do assert_nil IssueExtensionsStatusFlow.find :first end
+  test "issue_extensions_status_flows_should_return_nil" do assert_not_nil IssueExtensionsStatusFlow.find :first end
 
   test "find_or_create" do
     assert_nil IssueExtensionsStatusFlow.find :first, :conditions => 'project_id = 5'
