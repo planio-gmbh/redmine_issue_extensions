@@ -137,4 +137,10 @@ class IssuesControllerTest < ActionController::TestCase
 #    assert_response :redirect
     assert_response 200
   end
+
+  test "view_issues_show_description_bottom" do
+    @request.session[:user_id] = 1
+    issue = Issue.find 1
+    get :show, :id => issue.id
+  end
 end
