@@ -81,7 +81,7 @@ class IssuesControllerTest < ActionController::TestCase
 
     post :bulk_edit,
       :ids => [1,2],
-      :issue => {:status_id => 4, :assigned_to_id => 3},
+      :issue => {:status_id => 4, :assigned_to_id => 3, :done_ratio => 0},
       :fixed_version_id => 4
 
     assert_response :redirect
@@ -89,7 +89,6 @@ class IssuesControllerTest < ActionController::TestCase
     issues.each do |issue|
 #      assert_equal 4, issue.fixed_version_id
       assert_nil issue.fixed_version_id
-      assert_not_equal issue.project_id, issue.fixed_version.project_id
     end
   end
 
