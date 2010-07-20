@@ -15,6 +15,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 require File.dirname(__FILE__) + '/../test_helper'
+require 'issues_controller'
+
+# Re-raise errors caught by the controller.
+class IssuesController; def rescue_action(e) raise e end; end
 
 class IssuesControllerTest < ActionController::TestCase
   fixtures :projects,
@@ -45,6 +49,30 @@ class IssuesControllerTest < ActionController::TestCase
     @response   = ActionController::TestResponse.new
     User.current = nil
     EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
+  end
+
+  test "edit issue_status_assigned" do
+    @request.session[:user_id] = 2
+    spent_hours_before = Issue.find(1).spent_hours
+    assert_difference 'TimeEntry.count' do
+      post :edit,
+        :id => 1,
+        :issue => {:status_id => 1, :assigned_to_id => 3},
+        :notes => '2.5 hours added',
+        :time_entry => {:hours => '2.5', :comments => '', :activity_id => TimeEntryActivity.first}
+    end
+    assert_redirected_to :action => 'show', :id => '1'
+
+    issue = Issue.find 1
+
+    j = Journal.find :first, :order => 'id DESC'
+    assert_equal '2.5 hours added', j.notes
+    assert_equal 1, j.details.size
+
+    t = issue.time_entries.find :first, :order => 'id DESC'
+    assert_not_nil t
+    assert_equal 2.5, t.hours
+    assert_equal spent_hours_before + 2.5, issue.spent_hours
   end
 
   test "issue_added_relation success" do
