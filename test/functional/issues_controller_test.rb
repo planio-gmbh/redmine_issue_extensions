@@ -18,50 +18,36 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class IssuesControllerTest < ActionController::TestCase
   fixtures :projects,
-           :users,
-           :roles,
-           :members,
-           :issues,
-           :issue_statuses,
-           :versions,
-           :trackers,
-           :projects_trackers,
-           :issue_categories,
-           :enabled_modules,
-           :enumerations,
-           :attachments,
-           :workflows,
-           :custom_fields,
-           :custom_values,
-           :custom_fields_trackers,
-           :time_entries,
-           :journals,
-           :journal_details
+            :users,
+            :roles,
+            :members,
+            :issues,
+            :issue_statuses,
+            :versions,
+            :trackers,
+            :projects_trackers,
+            :issue_categories,
+            :enabled_modules,
+            :enumerations,
+            :attachments,
+            :workflows,
+            :custom_fields,
+            :custom_values,
+            :custom_fields_trackers,
+            :time_entries,
+            :journals,
+            :journal_details,
+            :issue_extensions_status_flows
 
   def setup
     @controller = IssuesController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
-
-    EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
-
     User.current = nil
-    roles = Role.find(:all)
-    roles.each {|role|
-      role.permissions << :manage_issue_extensions
-      role.save
-    }
+    EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
   end
 
-  # original new アクション
-  test "new original" do
-    @request.session[:user_id] = 1
-    get :new, :project_id => 1
-    assert_response :success
-  end
-
-  # Issue Extensions success new アクション
-  test "new Issue Extensions success" do
+  test "issue_added_relation success" do
     @request.session[:user_id] = 1
     get :new, :project_id => 1, :relation_issue => 1
     assert_response :success
@@ -71,8 +57,7 @@ class IssuesControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
-  # Issue Extensions invalid issue id new アクション
-  test "new Issue Extensions invalid issue id" do
+  test "issue_added_relation error because invalid issue id" do
     @request.session[:user_id] = 1
     get :new, :project_id => 1, :relation_issue => 100
     assert_response :success
