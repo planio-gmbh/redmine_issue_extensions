@@ -65,5 +65,9 @@ class IssuesControllerTest < ActionController::TestCase
     @request.session[:user_id] = 1
     get :new, :project_id => 1, :relation_issue => 1
     assert_response :success
+    post :new, :project_id => 1,
+      :issue => {:tracker_id => 1, :status_id => 1, :subject => 'test issue001'},
+      :relation_issue_id => 1
+    assert_response :redirect
   end
 end
