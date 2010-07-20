@@ -41,6 +41,7 @@ class IssuesControllerTest < ActionController::TestCase
             :time_entries,
             :journals,
             :journal_details,
+            :watchers,
             :issue_extensions_status_flows
 
   def setup
@@ -53,6 +54,47 @@ class IssuesControllerTest < ActionController::TestCase
 
   test "edit issue_status_assigned" do
     @request.session[:user_id] = 2
+    spent_hours_before = Issue.find(1).spent_hours
+    assert_difference 'TimeEntry.count' do
+      post :edit,
+        :id => 1,
+        :issue => {:status_id => 1, :assigned_to_id => 3},
+        :notes => '5 hours added',
+        :time_entry => {:hours => '5', :comments => '', :activity_id => TimeEntryActivity.first}
+    end
+    assert_redirected_to :action => 'show', :id => '1'
+
+    issue = Issue.find 1
+
+    j = Journal.find :first, :order => 'id DESC'
+    assert_equal '5 hours added', j.notes
+    assert_equal 1, j.details.size
+
+    t = issue.time_entries.find :first, :order => 'id DESC'
+    assert_not_nil t
+    assert_equal 5, t.hours
+    assert_equal spent_hours_before + 5, issue.spent_hours
+  end
+
+  test "bulk edit issue_status_closed" do
+    @request.session[:user_id] = 2
+
+    post :bulk_edit,
+      :ids => [1,2],
+      :issue => {:status_id => 4, :assigned_to_id => 3},
+      :fixed_version_id => 4
+
+    assert_response :redirect
+    issues = Issue.find [1,2]
+    issues.each do |issue|
+#      assert_equal 4, issue.fixed_version_id
+      assert_nil issue.fixed_version_id
+      assert_not_equal issue.project_id, issue.fixed_version.project_id
+    end
+  end
+
+  test "edit issue_added_watcher" do
+    @request.session[:user_id] = 3
     spent_hours_before = Issue.find(1).spent_hours
     assert_difference 'TimeEntry.count' do
       post :edit,
@@ -73,22 +115,6 @@ class IssuesControllerTest < ActionController::TestCase
     assert_not_nil t
     assert_equal 2.5, t.hours
     assert_equal spent_hours_before + 2.5, issue.spent_hours
-  end
-
-  test "bulk edit issue_status_closed" do
-    @request.session[:user_id] = 2
-
-    post :bulk_edit,
-      :ids => [1,2],
-      :issue => {:status_id => 4, :assigned_to_id => 3},
-      :fixed_version_id => 4
-
-    assert_response :redirect
-    issues = Issue.find [1,2]
-    issues.each do |issue|
-      assert_equal 4, issue.fixed_version_id
-      assert_not_equal issue.project_id, issue.fixed_version.project_id
-    end
   end
 
   test "issue_added_relation success" do
