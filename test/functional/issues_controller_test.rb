@@ -75,6 +75,22 @@ class IssuesControllerTest < ActionController::TestCase
     assert_equal spent_hours_before + 2.5, issue.spent_hours
   end
 
+  test "bulk edit issue_status_closed" do
+    @request.session[:user_id] = 2
+
+    post :bulk_edit,
+      :ids => [1,2],
+      :issue => {:status_id => 4, :assigned_to_id => 3},
+      :fixed_version_id => 4
+
+    assert_response :redirect
+    issues = Issue.find [1,2]
+    issues.each do |issue|
+      assert_equal 4, issue.fixed_version_id
+      assert_not_equal issue.project_id, issue.fixed_version.project_id
+    end
+  end
+
   test "issue_added_relation success" do
     @request.session[:user_id] = 1
     get :new, :project_id => 1, :relation_issue => 1
