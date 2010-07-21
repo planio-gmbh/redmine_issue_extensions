@@ -19,14 +19,18 @@ require File.dirname(__FILE__) + '/../test_helper'
 class IssueExtensionsStatusFlowTest < ActiveSupport::TestCase
   fixtures :issue_extensions_status_flows
 
-  test "issue_extensions_status_flows_should_return_nil" do assert_not_nil IssueExtensionsStatusFlow.find :first end
+  context 'a IssueExtensionsStatusFlow instance' do
+    should "find return not nil" do
+      assert_not_nil IssueExtensionsStatusFlow.find :first
+    end
 
-  test "find_or_create" do
-    assert_nil IssueExtensionsStatusFlow.find :first, :conditions => 'project_id = 5'
-    status_flow = IssueExtensionsStatusFlow.find_or_create 5, 1
-    assert_equal 5, status_flow.project_id
-    assert IssueExtensionsStatusFlow.find :first, :conditions => 'project_id = 5'
-    status_flow = IssueExtensionsStatusFlow.find_or_create 5, 1
-    assert_equal 5, status_flow.project_id
+    should "find_or_create return project_id 5" do
+      assert !IssueExtensionsStatusFlow.find(:first, :conditions => 'project_id = 5')
+      setting = IssueExtensionsStatusFlow.find_or_create 5, 1
+      assert_equal 5, setting.project_id
+      assert IssueExtensionsStatusFlow.find :first, :conditions => 'project_id = 5'
+      setting = IssueExtensionsStatusFlow.find_or_create 5, 1
+      assert_equal 5, setting.project_id
+    end
   end
 end
