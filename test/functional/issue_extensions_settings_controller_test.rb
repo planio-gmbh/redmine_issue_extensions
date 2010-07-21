@@ -17,18 +17,29 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class IssueExtensionsSettingsControllerTest < ActionController::TestCase
-  fixtures :issue_extensions_status_flows, :projects, :users, :trackers, :projects_trackers,
-    :issues, :issue_statuses, :enumerations, :roles, :members, :member_roles, :enabled_modules, :attachments, :versions
+  fixtures :projects,
+            :users,
+            :trackers,
+            :projects_trackers,
+            :issues,
+            :issue_statuses,
+            :enumerations,
+            :roles,
+            :members,
+            :member_roles,
+            :enabled_modules,
+            :attachments,
+            :versions,
+            :issue_extensions_status_flows
 
   def setup
     @controller = IssueExtensionsSettingsController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
     @request.env["HTTP_REFERER"] = '/'
-
     EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
-
     User.current = nil
+
     roles = Role.find :all
     roles.each {|role|
       role.permissions << :manage_issue_extensions
@@ -36,22 +47,24 @@ class IssueExtensionsSettingsControllerTest < ActionController::TestCase
     }
   end
 
-  # 匿名ユーザの update アクション
-  test "update unauthorized user" do
-    @request.session[:user_id] = User.anonymous.id
-    get :update, :id => 1
-    assert_response 302
-  end
+  context 'a IssueExtensionsSettingsController instance' do
+    # 匿名ユーザの update アクション
+    should "update return response 302" do
+      @request.session[:user_id] = User.anonymous.id
+      get :update, :id => 1
+      assert_response 302
+    end
 
-  # 認定ユーザの update アクション
-  test "update authorized user" do
-    @request.session[:user_id] = 1
-    get :update, :id => 1
-    assert_response :redirect
+    # 認定ユーザの update アクション
+    should "update return response redirect" do
+      @request.session[:user_id] = 1
+      get :update, :id => 1
+      assert_response :redirect
 
-    post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
-    assert_response :redirect
-    project = Project.find(1)
-    assert_redirected_to :controller => 'projects', :action => 'settings', :id => project, :tab => 'issue_extensions'
+      post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
+      assert_response :redirect
+      project = Project.find 1
+      assert_redirected_to :controller => 'projects', :action => 'settings', :id => project, :tab => 'issue_extensions'
+    end
   end
 end
