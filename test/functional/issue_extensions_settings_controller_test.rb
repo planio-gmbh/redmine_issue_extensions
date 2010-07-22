@@ -29,8 +29,7 @@ class IssueExtensionsSettingsControllerTest < ActionController::TestCase
             :member_roles,
             :enabled_modules,
             :attachments,
-            :versions,
-            :issue_extensions_status_flows
+            :versions
 
   def setup
     @controller = IssueExtensionsSettingsController.new
@@ -48,23 +47,36 @@ class IssueExtensionsSettingsControllerTest < ActionController::TestCase
   end
 
   context 'a IssueExtensionsSettingsController instance' do
-    # 匿名ユーザの update アクション
-    should "update return response 302" do
+    should "get update return response 302" do
       @request.session[:user_id] = User.anonymous.id
       get :update, :id => 1
       assert_response 302
     end
 
-    # 認定ユーザの update アクション
-    should "update return response redirect" do
+    should "post update return response 302" do
+      @request.session[:user_id] = User.anonymous.id
+      post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
+      assert_response 302
+    end
+
+    should "get update return response redirect" do
       @request.session[:user_id] = 1
       get :update, :id => 1
       assert_response :redirect
+      project = Project.find 1
+      assert_redirected_to :controller => 'projects', :action => 'settings', :id => project, :tab => 'issue_extensions'
+    end
 
+    should "post update return response redirect" do
+      @request.session[:user_id] = 1
       post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
       assert_response :redirect
       project = Project.find 1
       assert_redirected_to :controller => 'projects', :action => 'settings', :id => project, :tab => 'issue_extensions'
+    end
+
+    teardown do
+      IssueExtensionsStatusFlow.delete_all
     end
   end
 end
