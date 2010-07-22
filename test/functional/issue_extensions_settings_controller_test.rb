@@ -31,22 +31,22 @@ class IssueExtensionsSettingsControllerTest < ActionController::TestCase
             :attachments,
             :versions
 
-  def setup
-    @controller = IssueExtensionsSettingsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-    @request.env["HTTP_REFERER"] = '/'
-    EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
-    User.current = nil
-
-    roles = Role.find :all
-    roles.each {|role|
-      role.permissions << :manage_issue_extensions
-      role.save
-    }
-  end
-
   context 'a IssueExtensionsSettingsController instance' do
+    setup do
+      @controller = IssueExtensionsSettingsController.new
+      @request    = ActionController::TestRequest.new
+      @response   = ActionController::TestResponse.new
+      @request.env["HTTP_REFERER"] = '/'
+      EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
+      User.current = nil
+
+      roles = Role.find :all
+      roles.each {|role|
+        role.permissions << :manage_issue_extensions
+        role.save
+      }
+    end
+
     should "get update return response 302" do
       @request.session[:user_id] = User.anonymous.id
       get :update, :id => 1
