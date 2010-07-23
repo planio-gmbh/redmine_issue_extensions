@@ -16,7 +16,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 require File.dirname(__FILE__) + '/../test_helper'
 
-class IssueExtensionsStatusFlowTest < Test::Unit::TestCase
+class IssueExtensionsStatusFlowTest < ActiveSupport::TestCase
   def a_issue_extensions_status_flow
     IssueExtensionsStatusFlow.create! :project_id => 1,
       :tracker_id => 0,
