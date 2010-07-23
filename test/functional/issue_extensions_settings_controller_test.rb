@@ -31,78 +31,122 @@ class IssueExtensionsSettingsControllerTest < ActionController::TestCase
             :attachments,
             :versions
 
-  context 'a IssueExtensionsSettingsController instance' do
-    setup do
-      @controller = IssueExtensionsSettingsController.new
-      @request    = ActionController::TestRequest.new
-      @response   = ActionController::TestResponse.new
-      @request.env["HTTP_REFERER"] = '/'
-      EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
-      User.current = nil
+  def setup
+    @controller = IssueExtensionsSettingsController.new
+    @request    = ActionController::TestRequest.new
+    @response   = ActionController::TestResponse.new
+    EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
+  end
 
-      roles = Role.find :all
-      roles.each {|role|
-        role.permissions << :manage_issue_extensions
-        role.save
-      }
+  context '#update' do
+    context "by anonymous" do
+      setup do
+        @request.session[:user_id] = User.anonymous.id
+      end
+
+      should "302 get" do
+        get :update, :id => 1
+        assert_response 302
+      end
+
+      should "302 post" do
+        post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
+        assert_response 302
+      end
+
+      context "with permission" do
+        setup do
+          Role.anonymous.add_permission! :manage_issue_extensions
+        end
+
+        should "302 get" do
+          get :update, :id => 1
+          assert_response 302
+        end
+
+        should "302 post" do
+          post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
+          assert_response 302
+        end
+      end
     end
 
-    should "get update return response 302 because anonymous access without permission" do
-      Role.anonymous.remove_permission!(:manage_issue_extensions)
-      @request.session[:user_id] = User.anonymous.id
-      get :update, :id => 1
-      assert_response 302
+    context "by non member" do
+      setup do
+        @request.session[:user_id] = 9
+      end
+
+      should "403 get" do
+        get :update, :id => 1
+        assert_response 403
+      end
+
+      should "403 post" do
+        post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
+        assert_response 403
+      end
+
+      context "with permission" do
+        setup do
+          Role.non_member.add_permission! :manage_issue_extensions
+        end
+
+        should "redirect get" do
+          get :update, :id => 1
+          assert_response :redirect
+          project = Project.find 1
+          assert_redirected_to :controller => 'projects', :action => 'settings', :id => project, :tab => 'issue_extensions'
+        end
+
+        should "redirect post" do
+          post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
+          assert_response :redirect
+          issue_extensions_status_flow = IssueExtensionsStatusFlow.find :first, :conditions => 'project_id = 1'
+          assert_equal 1, issue_extensions_status_flow.old_status_id
+          assert_equal 2, issue_extensions_status_flow.new_status_id
+          project = Project.find 1
+          assert_redirected_to :controller => 'projects', :action => 'settings', :id => project, :tab => 'issue_extensions'
+        end
+      end
     end
 
-    should "post update return response 302 because anonymous access without permission" do
-      Role.anonymous.remove_permission!(:manage_issue_extensions)
-      @request.session[:user_id] = User.anonymous.id
-      post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
-      assert_response 302
-    end
+    context "by member" do
+      setup do
+        @request.session[:user_id] = 2
+      end
 
-    should "get update return response 403 because non member access without permission" do
-      Role.non_member.remove_permission!(:manage_issue_extensions)
-      @request.session[:user_id] = 9
-      get :update, :id => 1
-      assert_response 403
-    end
+      should "403 get" do
+        get :update, :id => 1
+        assert_response 403
+      end
 
-    should "post update return response 403 because non member access without permission" do
-      Role.non_member.remove_permission!(:manage_issue_extensions)
-      @request.session[:user_id] = 9
-      post :update, :id => 1
-      assert_response 403
-    end
+      should "403 post" do
+        post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
+        assert_response 403
+      end
 
-    should "get update return response 403 because member access without permission" do
-      Role.find(1).remove_permission!(:manage_issue_extensions)
-      @request.session[:user_id] = 2
-      get :update, :id => 1
-      assert_response 403
-    end
+      context "with permission" do
+        setup do
+          Role.find(1).add_permission! :manage_issue_extensions
+        end
 
-    should "post update return response 403 because member access without permission" do
-      Role.find(1).remove_permission!(:manage_issue_extensions)
-      @request.session[:user_id] = 2
-      post :update, :id => 1
-      assert_response 403
-    end
+        should "redirect get" do
+          get :update, :id => 1
+          assert_response :redirect
+          project = Project.find 1
+          assert_redirected_to :controller => 'projects', :action => 'settings', :id => project, :tab => 'issue_extensions'
+        end
 
-    should "get update return response redirect" do
-      @request.session[:user_id] = 1
-      get :update, :id => 1
-      assert_response :redirect
-      project = Project.find 1
-      assert_redirected_to :controller => 'projects', :action => 'settings', :id => project, :tab => 'issue_extensions'
-    end
-
-    should "post update return response redirect" do
-      @request.session[:user_id] = 1
-      post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
-      assert_response :redirect
-      project = Project.find 1
-      assert_redirected_to :controller => 'projects', :action => 'settings', :id => project, :tab => 'issue_extensions'
+        should "redirect post" do
+          post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
+          assert_response :redirect
+          issue_extensions_status_flow = IssueExtensionsStatusFlow.find :first, :conditions => 'project_id = 1'
+          assert_equal 1, issue_extensions_status_flow.old_status_id
+          assert_equal 2, issue_extensions_status_flow.new_status_id
+          project = Project.find 1
+          assert_redirected_to :controller => 'projects', :action => 'settings', :id => project, :tab => 'issue_extensions'
+        end
+      end
     end
 
     teardown do
