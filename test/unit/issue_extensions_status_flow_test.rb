@@ -36,11 +36,11 @@ class IssueExtensionsStatusFlowTest < ActiveSupport::TestCase
 
     should "find_or_create return project_id 5" do
       assert !IssueExtensionsStatusFlow.find(:first, :conditions => 'project_id = 5')
-      issue_extensions_status_flow = IssueExtensionsStatusFlow.find_or_create 5, 1
-      assert_equal 5, issue_extensions_status_flow.project_id
+      create = IssueExtensionsStatusFlow.find_or_create 5, 1
+      assert_equal 5, create.project_id
       assert IssueExtensionsStatusFlow.find :first, :conditions => 'project_id = 5'
-      issue_extensions_status_flow = IssueExtensionsStatusFlow.find_or_create 5, 1
-      assert_equal 5, issue_extensions_status_flow.project_id
+      find = IssueExtensionsStatusFlow.find_or_create 5, 1
+      assert_equal create, find
     end
 
     teardown do
