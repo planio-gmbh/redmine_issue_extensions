@@ -47,13 +47,15 @@ class IssueExtensionsSettingsControllerTest < ActionController::TestCase
       }
     end
 
-    should "get update return response 302" do
+    should "get update return response 302 because anonymous access without permission" do
+      Role.anonymous.remove_permission!(:manage_issue_extensions)
       @request.session[:user_id] = User.anonymous.id
       get :update, :id => 1
       assert_response 302
     end
 
-    should "post update return response 302" do
+    should "post update return response 302 because anonymous access without permission" do
+      Role.anonymous.remove_permission!(:manage_issue_extensions)
       @request.session[:user_id] = User.anonymous.id
       post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
       assert_response 302
