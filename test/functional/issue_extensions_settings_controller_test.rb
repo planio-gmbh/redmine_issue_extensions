@@ -61,6 +61,20 @@ class IssueExtensionsSettingsControllerTest < ActionController::TestCase
       assert_response 302
     end
 
+    should "get update return response 403 because non member access without permission" do
+      Role.non_member.remove_permission!(:manage_issue_extensions)
+      @request.session[:user_id] = 9
+      get :update, :id => 1
+      assert_response 403
+    end
+
+    should "post update return response 403 because non member access without permission" do
+      Role.non_member.remove_permission!(:manage_issue_extensions)
+      @request.session[:user_id] = 9
+      post :update, :id => 1
+      assert_response 403
+    end
+
     should "get update return response redirect" do
       @request.session[:user_id] = 1
       get :update, :id => 1
