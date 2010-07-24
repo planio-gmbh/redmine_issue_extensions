@@ -99,6 +99,10 @@ class IssuesControllerTest < ActionController::TestCase
       assert_equal 5, issue.status_id
       assert_equal 4, issue.priority_id
       assert_equal 100, issue.done_ratio
+      watcher = Watcher.find :first, :conditions => ["watchable_id = (?)", Issue.last.id]
+      assert_not_nil watcher
+      assert_equal 2, watcher.user_id
+      assert_equal 'Issue', watcher.watchable_type
     end
   end
 end
