@@ -73,6 +73,21 @@ class IssuesControllerTest < ActionController::TestCase
                                       :updated_by => 1
   end
 
+  context "#new" do
+    context "by member" do
+      should "accept get" do
+        a_issue
+        get :new, :project_id => 1,
+          :relation_issue => Issue.last.id
+        assert_response :success
+        assert_template 'new.rhtml'
+        assert_tag :input, :attributes => {:id => 'relation_issue_id'}
+#        ,
+#          :descendant => {:tag => 'a', :content => /new/ }
+      end
+    end
+  end
+
   context "#create" do
     should "accept post with relation issue" do
       a_issue
@@ -92,6 +107,20 @@ class IssuesControllerTest < ActionController::TestCase
       assert_equal issue_relation.relation_type, IssueRelation::TYPE_RELATES
       assert_equal Issue.last.id - 1, issue_relation.issue_from_id
       assert_equal Issue.last.id, issue_relation.issue_to_id
+    end
+  end
+
+  context "#show" do
+    context "by member" do
+      should "accept get" do
+        a_issue
+        get :show, :id => Issue.last.id
+        assert_response :success
+        assert_template 'show.rhtml'
+        assert_tag :div, :attributes => {:id => 'issue_extensions_relations'}
+#        ,
+#          :descendant => {:tag => 'a', :content => /new/ }
+      end
     end
   end
 
@@ -123,20 +152,6 @@ class IssuesControllerTest < ActionController::TestCase
 #      assert_not_nil watcher
 #      assert_equal 2, watcher.user_id
 #      assert_equal 'Issue', watcher.watchable_type
-    end
-  end
-
-  context "#show" do
-    context "by member" do
-      should "accept get" do
-        a_issue
-        get :show, :id => Issue.last.id
-        assert_response :success
-        assert_template 'show.rhtml'
-        assert_tag :div, :attributes => {:id => 'issue_extensions_relations'}
-#        ,
-#          :descendant => {:tag => 'a', :content => /new/ }
-      end
     end
   end
 end
