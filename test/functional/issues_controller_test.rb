@@ -53,17 +53,21 @@ class IssuesControllerTest < ActionController::TestCase
     @request.session[:user_id] = 2
   end
 
+  def a_issue
+    assert_difference 'Issue.count' do
+      post :create, :project_id => 1,
+        :issue => {:tracker_id => 3,
+                   :status_id => 2,
+                   :subject => 'This is the test_new issue',
+                   :description => 'This is the description',
+                   :priority_id => 5,
+                   :estimated_hours => ''}
+    end
+  end
+
   context "#create" do
     should "accept post with relation issue" do
-      assert_difference 'Issue.count' do
-        post :create, :project_id => 1,
-          :issue => {:tracker_id => 3,
-                     :status_id => 2,
-                     :subject => 'This is the test_new issue',
-                     :description => 'This is the description',
-                     :priority_id => 5,
-                     :estimated_hours => ''}
-      end
+      a_issue
       assert_difference 'Issue.count' do
         post :create, :project_id => 1,
           :relation_issue_id => Issue.last.id,
@@ -85,15 +89,7 @@ class IssuesControllerTest < ActionController::TestCase
 
   context "#update" do
     should "accept post with done_ratio 100 and watcher" do
-      assert_difference 'Issue.count' do
-        post :create, :project_id => 1,
-          :issue => {:tracker_id => 3,
-                     :status_id => 2,
-                     :subject => 'This is the test_new issue',
-                     :description => 'This is the description',
-                     :priority_id => 5,
-                     :estimated_hours => ''}
-      end
+      a_issue
       put :update, :id => Issue.last.id,
         :issue => {:status_id => 5,
                    :priority_id => 4}
