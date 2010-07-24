@@ -38,7 +38,7 @@ class IssueExtensionsSettingsControllerTest < ActionController::TestCase
     EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
   end
 
-  context '#update' do
+  context "#update" do
     context "by anonymous" do
       setup do
         @request.session[:user_id] = User.anonymous.id
@@ -102,8 +102,10 @@ class IssueExtensionsSettingsControllerTest < ActionController::TestCase
           post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
           assert_response :redirect
           issue_extensions_status_flow = IssueExtensionsStatusFlow.find :first, :conditions => 'project_id = 1'
+          assert_equal 1, issue_extensions_status_flow.project_id
           assert_equal 1, issue_extensions_status_flow.old_status_id
           assert_equal 2, issue_extensions_status_flow.new_status_id
+          assert_equal 9, issue_extensions_status_flow.updated_by
           project = Project.find 1
           assert_redirected_to :controller => 'projects', :action => 'settings', :id => project, :tab => 'issue_extensions'
         end
@@ -141,8 +143,10 @@ class IssueExtensionsSettingsControllerTest < ActionController::TestCase
           post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
           assert_response :redirect
           issue_extensions_status_flow = IssueExtensionsStatusFlow.find :first, :conditions => 'project_id = 1'
+          assert_equal 1, issue_extensions_status_flow.project_id
           assert_equal 1, issue_extensions_status_flow.old_status_id
           assert_equal 2, issue_extensions_status_flow.new_status_id
+          assert_equal 2, issue_extensions_status_flow.updated_by
           project = Project.find 1
           assert_redirected_to :controller => 'projects', :action => 'settings', :id => project, :tab => 'issue_extensions'
         end
