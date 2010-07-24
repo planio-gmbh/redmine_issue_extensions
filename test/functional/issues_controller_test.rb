@@ -57,12 +57,20 @@ class IssuesControllerTest < ActionController::TestCase
     assert_difference 'Issue.count' do
       post :create, :project_id => 1,
         :issue => {:tracker_id => 3,
-                   :status_id => 2,
+                   :status_id => 1,
                    :subject => 'This is the test_new issue',
                    :description => 'This is the description',
-                   :priority_id => 5,
+                   :priority_id => 4,
                    :estimated_hours => ''}
     end
+  end
+
+  def a_issue_extensions_status_flow
+    IssueExtensionsStatusFlow.create! :project_id => 1,
+                                      :tracker_id => 0,
+                                      :old_status_id => 1,
+                                      :new_status_id => 2,
+                                      :updated_by => 1
   end
 
   context "#create" do
@@ -88,16 +96,28 @@ class IssuesControllerTest < ActionController::TestCase
   end
 
   context "#update" do
-    should "accept post with done_ratio 100 and watcher" do
+    should "accept post with status_assigned and watcher" do
       a_issue
+      a_issue_extensions_status_flow
       put :update, :id => Issue.last.id,
-        :issue => {:status_id => 5,
-                   :priority_id => 4}
+        :issue => {:assigned_to_id => 2}
       assert_redirected_to :action => 'show', :id => Issue.last.id
       issue = Issue.find Issue.last.id
       assert_not_nil issue
-      assert_equal 5, issue.status_id
-      assert_equal 4, issue.priority_id
+      assert_equal 2, issue.status_id
+      watcher = Watcher.find :first, :conditions => ["watchable_id = (?)", Issue.last.id]
+      assert_not_nil watcher
+      assert_equal 2, watcher.user_id
+      assert_equal 'Issue', watcher.watchable_type
+    end
+
+    should "accept post with done_ratio 100 and watcher" do
+      a_issue
+      put :update, :id => Issue.last.id,
+        :issue => {:status_id => 5}
+      assert_redirected_to :action => 'show', :id => Issue.last.id
+      issue = Issue.find Issue.last.id
+      assert_not_nil issue
       assert_equal 100, issue.done_ratio
       watcher = Watcher.find :first, :conditions => ["watchable_id = (?)", Issue.last.id]
       assert_not_nil watcher
