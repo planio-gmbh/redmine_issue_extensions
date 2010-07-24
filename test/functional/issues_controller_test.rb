@@ -128,16 +128,14 @@ class IssuesControllerTest < ActionController::TestCase
 
   context "#show" do
     context "by member" do
-      should "redirect get" do
+      should "accept get" do
         a_issue
         get :show, :id => Issue.last.id
         assert_response :success
         assert_template 'show.rhtml'
-      # anonymous role is allowed to add a note
-#      assert_tag :tag => 'form',
-#                 :descendant => { :tag => 'fieldset',
-#                                  :child => { :tag => 'legend',
-#                                              :content => /Notes/ } }
+        assert_tag :div, :attributes => {:id => 'issue_extensions_relations'}
+#        ,
+#          :descendant => {:tag => 'a', :content => /new/ }
       end
     end
   end
