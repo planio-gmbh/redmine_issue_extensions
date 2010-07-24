@@ -25,26 +25,40 @@ class IssueExtensionsStatusFlowTest < ActiveSupport::TestCase
                                       :updated_by => 1
   end
 
-  context 'a IssueExtensionsStatusFlow instance' do
-    setup do
-      a_issue_extensions_status_flow
+  context "#find" do
+    should "return nil" do
+      assert_nil IssueExtensionsStatusFlow.find :first
     end
 
-    should "find return not nil" do
-      assert_not_nil IssueExtensionsStatusFlow.find :first
-    end
+    context "with a IssueExtensionsStatusFlow record" do
+      setup do
+        a_issue_extensions_status_flow
+      end
 
-    should "find_or_create return project_id 5" do
+      should "return not nil" do
+        assert_not_nil IssueExtensionsStatusFlow.find :first
+      end
+    end
+  end
+
+  context "#find_or_create" do
+    should "return create record" do
       assert !IssueExtensionsStatusFlow.find(:first, :conditions => 'project_id = 5')
       create = IssueExtensionsStatusFlow.find_or_create 5, 1
       assert_equal 5, create.project_id
       assert IssueExtensionsStatusFlow.find :first, :conditions => 'project_id = 5'
-      find = IssueExtensionsStatusFlow.find_or_create 5, 1
-      assert_equal create, find
     end
 
-    teardown do
-      IssueExtensionsStatusFlow.delete_all
+    should "create equal find" do
+      assert !IssueExtensionsStatusFlow.find(:first, :conditions => 'project_id = 5')
+      create = IssueExtensionsStatusFlow.find_or_create 5, 1
+      find = IssueExtensionsStatusFlow.find_or_create 5, 1
+      assert_equal 5, find.project_id
+      assert_equal create, find
     end
+  end
+
+  teardown do
+    IssueExtensionsStatusFlow.delete_all
   end
 end
