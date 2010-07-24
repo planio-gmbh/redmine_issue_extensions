@@ -32,7 +32,7 @@ class ProjectsControllerTest < ActionController::TestCase
     EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
   end
 
-  context '#settings' do
+  context "#settings" do
     context "by admin user" do
       setup do
         @request.session[:user_id] = 1
