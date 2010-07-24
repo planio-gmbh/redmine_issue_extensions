@@ -125,4 +125,20 @@ class IssuesControllerTest < ActionController::TestCase
 #      assert_equal 'Issue', watcher.watchable_type
     end
   end
+
+  context "#show" do
+    context "by member" do
+      should "redirect get" do
+        a_issue
+        get :show, :id => Issue.last.id
+        assert_response :success
+        assert_template 'show.rhtml'
+      # anonymous role is allowed to add a note
+#      assert_tag :tag => 'form',
+#                 :descendant => { :tag => 'fieldset',
+#                                  :child => { :tag => 'legend',
+#                                              :content => /Notes/ } }
+      end
+    end
+  end
 end
