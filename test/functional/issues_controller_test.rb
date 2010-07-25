@@ -43,7 +43,8 @@ class IssuesControllerTest < ActionController::TestCase
             :time_entries,
             :journals,
             :journal_details,
-            :queries
+            :queries,
+            :watchers
 
   def setup
     @controller = IssuesController.new
@@ -66,11 +67,11 @@ class IssuesControllerTest < ActionController::TestCase
   end
 
   def a_issue_extensions_status_flow
-    IssueExtensionsStatusFlow.create! :project_id => 1,
-                                      :tracker_id => 0,
-                                      :old_status_id => 1,
-                                      :new_status_id => 2,
-                                      :updated_by => 1
+    IssueExtensionsStatusFlow.generate! :project_id => 1,
+                                        :tracker_id => 0,
+                                        :old_status_id => 1,
+                                        :new_status_id => 2,
+                                        :updated_by => 1
   end
 
   context "#new" do
@@ -134,10 +135,10 @@ class IssuesControllerTest < ActionController::TestCase
       issue = Issue.find Issue.last.id
       assert_not_nil issue
       assert_equal 2, issue.status_id
-#      watcher = Watcher.find :first, :conditions => ["watchable_id = (?)", Issue.last.id]
-#      assert_not_nil watcher
-#      assert_equal 2, watcher.user_id
-#      assert_equal 'Issue', watcher.watchable_type
+      watcher = Watcher.find :first, :conditions => ["watchable_id = (?)", Issue.last.id]
+      assert_not_nil watcher
+      assert_equal 2, watcher.user_id
+      assert_equal 'Issue', watcher.watchable_type
     end
 
     should "accept post with done_ratio 100 and watcher" do
@@ -183,5 +184,9 @@ class IssuesControllerTest < ActionController::TestCase
         assert_equal 100, issue.done_ratio
       end
     end
+  end
+
+  teardown do
+    IssueExtensionsStatusFlow.delete_all
   end
 end

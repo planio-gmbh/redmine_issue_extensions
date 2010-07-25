@@ -18,11 +18,11 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class IssueExtensionsStatusFlowTest < ActiveSupport::TestCase
   def a_issue_extensions_status_flow
-    IssueExtensionsStatusFlow.create! :project_id => 1,
-                                      :tracker_id => 0,
-                                      :old_status_id => 1,
-                                      :new_status_id => 2,
-                                      :updated_by => 1
+    IssueExtensionsStatusFlow.generate! :project_id => 1,
+                                        :tracker_id => 0,
+                                        :old_status_id => 1,
+                                        :new_status_id => 2,
+                                        :updated_by => 1
   end
 
   context "#find" do
