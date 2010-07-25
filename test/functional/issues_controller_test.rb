@@ -149,10 +149,10 @@ class IssuesControllerTest < ActionController::TestCase
       issue = Issue.find Issue.last.id
       assert_not_nil issue
       assert_equal 100, issue.done_ratio
-#      watcher = Watcher.find :first, :conditions => ["watchable_id = (?)", Issue.last.id]
-#      assert_not_nil watcher
-#      assert_equal 2, watcher.user_id
-#      assert_equal 'Issue', watcher.watchable_type
+      watcher = Watcher.find :first, :conditions => ["watchable_id = (?)", Issue.last.id]
+      assert_not_nil watcher
+      assert_equal 2, watcher.user_id
+      assert_equal 'Issue', watcher.watchable_type
     end
 
 #    should "ignore post with 'バグ' tracker and '終了' status" do
