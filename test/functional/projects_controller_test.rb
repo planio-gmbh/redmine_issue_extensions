@@ -32,6 +32,74 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   context "#settings" do
+    context "by anonymous" do
+      setup do
+        @request.session[:user_id] = User.anonymous.id
+      end
+
+      should "302 get" do
+        get :settings, :id => 1
+        assert_response 302
+      end
+
+      should "302 post" do
+        get :settings, :id => 1
+        assert_response 302
+      end
+
+      context "with permission" do
+        setup do
+          Role.anonymous.add_permission! :edit_project
+        end
+
+        should "not exist tag id get" do
+          get :settings, :id => 1
+          assert_response :success
+          assert_template 'settings'
+          assert_no_tag :div, :attributes => {:class => 'tabs'},
+            :descendant => {:tag => 'ul',
+              :descendant => {:tag => 'li',
+                :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+        end
+
+        should "not exist tag id post" do
+          post :settings, :id => 1
+          assert_response :success
+          assert_template 'settings'
+          assert_no_tag :div, :attributes => {:class => 'tabs'},
+            :descendant => {:tag => 'ul',
+              :descendant => {:tag => 'li',
+                :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+        end
+
+        context "and module" do
+          setup do
+            EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
+          end
+
+          should "not exist tag id get" do
+            get :settings, :id => 1
+            assert_response :success
+            assert_template 'settings'
+            assert_no_tag :div, :attributes => {:class => 'tabs'},
+              :descendant => {:tag => 'ul',
+                :descendant => {:tag => 'li',
+                  :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+          end
+
+          should "not exist tag id post" do
+            post :settings, :id => 1
+            assert_response :success
+            assert_template 'settings'
+            assert_no_tag :div, :attributes => {:class => 'tabs'},
+              :descendant => {:tag => 'ul',
+                :descendant => {:tag => 'li',
+                  :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+          end
+        end
+      end
+    end
+
     context "by admin user" do
       setup do
         @request.session[:user_id] = 1
