@@ -37,24 +37,50 @@ class ProjectsControllerTest < ActionController::TestCase
         @request.session[:user_id] = 1
       end
 
-      should "accept get" do
+      should "not exist tag id get" do
         get :settings, :id => 1
         assert_response :success
         assert_template 'settings'
-        assert_tag :div, :attributes => {:class => 'tabs'},
+        assert_no_tag :div, :attributes => {:class => 'tabs'},
           :descendant => {:tag => 'ul',
             :descendant => {:tag => 'li',
               :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
       end
 
-      should "accept post" do
+      should "not exist tag id post" do
         post :settings, :id => 1
         assert_response :success
         assert_template 'settings'
-        assert_tag :div, :attributes => {:class => 'tabs'},
+        assert_no_tag :div, :attributes => {:class => 'tabs'},
           :descendant => {:tag => 'ul',
             :descendant => {:tag => 'li',
               :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+      end
+
+      context "with module" do
+        setup do
+          EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
+        end
+
+        should "exist tag id get" do
+          get :settings, :id => 1
+          assert_response :success
+          assert_template 'settings'
+          assert_tag :div, :attributes => {:class => 'tabs'},
+            :descendant => {:tag => 'ul',
+              :descendant => {:tag => 'li',
+                :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+        end
+
+        should "exist tag id post" do
+          post :settings, :id => 1
+          assert_response :success
+          assert_template 'settings'
+          assert_tag :div, :attributes => {:class => 'tabs'},
+            :descendant => {:tag => 'ul',
+              :descendant => {:tag => 'li',
+                :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+        end
       end
     end
   end
