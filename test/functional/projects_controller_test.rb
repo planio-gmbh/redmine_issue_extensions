@@ -171,6 +171,7 @@ class ProjectsControllerTest < ActionController::TestCase
     context "by admin user" do
       setup do
         @request.session[:user_id] = 1
+        Role.find(1).remove_permission! :edit_project
       end
 
       should "not exist tag id get" do
@@ -184,7 +185,7 @@ class ProjectsControllerTest < ActionController::TestCase
       end
 
       should "not exist tag id post" do
-        post :settings, :id => 1
+        get :settings, :id => 1
         assert_response :success
         assert_template 'settings'
         assert_no_tag :div, :attributes => {:class => 'tabs'},
@@ -193,29 +194,55 @@ class ProjectsControllerTest < ActionController::TestCase
               :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
       end
 
-      context "with module" do
+      context "with permission" do
         setup do
-          EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
+          Role.find(1).add_permission! :edit_project
         end
 
-        should "exist tag id get" do
+        should "not exist tag id get" do
           get :settings, :id => 1
           assert_response :success
           assert_template 'settings'
-          assert_tag :div, :attributes => {:class => 'tabs'},
+          assert_no_tag :div, :attributes => {:class => 'tabs'},
             :descendant => {:tag => 'ul',
               :descendant => {:tag => 'li',
                 :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
         end
 
-        should "exist tag id post" do
+        should "not exist tag id post" do
           post :settings, :id => 1
           assert_response :success
           assert_template 'settings'
-          assert_tag :div, :attributes => {:class => 'tabs'},
+          assert_no_tag :div, :attributes => {:class => 'tabs'},
             :descendant => {:tag => 'ul',
               :descendant => {:tag => 'li',
                 :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+        end
+
+        context "and module" do
+          setup do
+            EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
+          end
+
+          should "exist tag id get" do
+            get :settings, :id => 1
+            assert_response :success
+            assert_template 'settings'
+            assert_tag :div, :attributes => {:class => 'tabs'},
+              :descendant => {:tag => 'ul',
+                :descendant => {:tag => 'li',
+                  :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+          end
+
+          should "exist tag id post" do
+            post :settings, :id => 1
+            assert_response :success
+            assert_template 'settings'
+            assert_tag :div, :attributes => {:class => 'tabs'},
+              :descendant => {:tag => 'ul',
+                :descendant => {:tag => 'li',
+                  :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+          end
         end
       end
     end
