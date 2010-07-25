@@ -42,6 +42,12 @@ class ProjectsControllerTest < ActionController::TestCase
         get :settings, :id => 1
         assert_response :success
         assert_template 'settings'
+        assert_tag :div, :attributes => {:class => 'tabs'},
+          :descendant => {:tag => 'ul'}
+#               :descendant => { :tag => 'fieldset',
+#                                :child => { :tag => 'legend',
+#                                            :content => /Notes/ } }
+#
       end
 
       should "accept post" do
