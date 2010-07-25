@@ -153,5 +153,35 @@ class IssuesControllerTest < ActionController::TestCase
 #      assert_equal 2, watcher.user_id
 #      assert_equal 'Issue', watcher.watchable_type
     end
+
+#    should "ignore post with 'バグ' tracker and '終了' status" do
+#      a_issue
+#      Trackers.generate! :name => 'バグ', :is_in_chlog => true, :position => 4
+#      IssueStatus.generate! :name => '終了', :is_default => false, :is_closed => true
+#      put :update, :id => Issue.last.id,
+#        :issue => {:tracker_id => 4,
+#                   :status_id => IssueStatus.last.id}
+#      assert_redirected_to :action => 'show', :id => Issue.last.id
+#      watcher = Watcher.find :first, :conditions => ["watchable_id = (?)", Issue.last.id]
+#      assert_not_nil watcher
+#      assert_equal 2, watcher.user_id
+#      assert_equal 'Issue', watcher.watchable_type
+#    end
+  end
+
+  context "#bulk_edit" do
+    should "accept posts with done_ratio 100" do
+      a_issue
+      a_issue
+      issue_last_id = Issue.last.id
+      post :bulk_edit, :ids => [issue_last_id - 1, issue_last_id], :issue => {:status_id => 5}
+      assert_response :redirect
+      issues = Issue.find [issue_last_id - 1, issue_last_id]
+      assert_not_nil issues
+      issues.each do |issue|
+        assert_equal 5, issue.status_id
+        assert_equal 100, issue.done_ratio
+      end
+    end
   end
 end

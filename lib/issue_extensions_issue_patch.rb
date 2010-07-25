@@ -32,16 +32,16 @@ module IssueExtensionsIssuePatch
     # トラッカーがバグ、ステータスが終了のチケットに対象バージョンが入力されていない場合はエラーにする
     def validate_with_issue_extensions
       validate_without_issue_extensions
-      project = Project.find read_attribute :project_id
-      unless project.module_enabled? :issue_extensions == nil
-        tracker = Tracker.find :first, :conditions => ["name = (?)", 'バグ']
-        issue_status = IssueStatus.find :first, :conditions => ["name = (?)", '終了']
-        if tracker != nil && issue_status != nil
-          if tracker.id == read_attribute(:tracker_id) && issue_status.id == read_attribute(:status_id)
-            errors.add :fixed_version_id, :empty if read_attribute(:fixed_version_id).blank?
-          end
-        end
-      end
+#      project = Project.find read_attribute :project_id
+#      unless project.module_enabled? :issue_extensions == nil
+#        tracker = Tracker.find :first, :conditions => ["name = (?)", 'バグ']
+#        issue_status = IssueStatus.find :first, :conditions => ["name = (?)", '終了']
+#        if tracker != nil && issue_status != nil
+#          if tracker.id == read_attribute(:tracker_id) && issue_status.id == read_attribute(:status_id)
+#            errors.add :fixed_version_id, :empty if read_attribute(:fixed_version_id).blank?
+#          end
+#        end
+#      end
     end
   end
 end
