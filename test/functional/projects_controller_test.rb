@@ -29,7 +29,6 @@ class ProjectsControllerTest < ActionController::TestCase
     @controller = ProjectsController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
-    EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
   end
 
   context "#settings" do
@@ -43,17 +42,19 @@ class ProjectsControllerTest < ActionController::TestCase
         assert_response :success
         assert_template 'settings'
         assert_tag :div, :attributes => {:class => 'tabs'},
-          :descendant => {:tag => 'ul'}
-#               :descendant => { :tag => 'fieldset',
-#                                :child => { :tag => 'legend',
-#                                            :content => /Notes/ } }
-#
+          :descendant => {:tag => 'ul',
+            :descendant => {:tag => 'li',
+              :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
       end
 
       should "accept post" do
         post :settings, :id => 1
         assert_response :success
         assert_template 'settings'
+        assert_tag :div, :attributes => {:class => 'tabs'},
+          :descendant => {:tag => 'ul',
+            :descendant => {:tag => 'li',
+              :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
       end
     end
   end
