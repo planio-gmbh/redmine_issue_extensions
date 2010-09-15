@@ -120,6 +120,7 @@ class IssuesControllerTest < ActionController::TestCase
         assert_template 'show.rhtml'
         assert_tag :div, :attributes => {:id => 'issue_extensions_relations'}
         assert_tag :div, :attributes => {:id => 'issue_extensions_search'}
+        assert_tag :a, :attributes => {:class => 'icon icon-checked'}
 #        ,
 #          :descendant => {:tag => 'a', :content => /new/ }
       end

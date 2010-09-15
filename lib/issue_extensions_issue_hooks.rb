@@ -128,6 +128,7 @@ class IssueExtensionsIssueHooks < Redmine::Hook::Listener
           output << "<div id=\"issue_extensions_search\">\n"
           output << "  " + l(:field_subject) + ":\n"
           output << text_field_tag("cb_title", cb_subject, :size => 30) + "\n"
+          output << link_to(l(:button_apply), {:controller => 'issues', :action => 'show', :project_id => project, :cb_subject => cb_subject}, :class => 'icon icon-checked' ) + "\n"
           output << "</div>\n"
           return output
         rescue
