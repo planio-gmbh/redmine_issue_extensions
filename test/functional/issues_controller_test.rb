@@ -119,6 +119,7 @@ class IssuesControllerTest < ActionController::TestCase
         assert_response :success
         assert_template 'show.rhtml'
         assert_tag :div, :attributes => {:id => 'issue_extensions_relations'}
+        assert_tag :div, :attributes => {:id => 'issue_extensions_search'}
 #        ,
 #          :descendant => {:tag => 'a', :content => /new/ }
       end
