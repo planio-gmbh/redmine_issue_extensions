@@ -5,7 +5,8 @@ en:
   field_old_status: Alpha
   field_new_status: Beta
 
-  label_add_relation_issue: Add Related this issue
+  label_add_relation_issue: Add related this issue
+  label_searched_issues: Searched issues
 
   permission_manage_issue_extensions: Manage Issue Extensions
 
