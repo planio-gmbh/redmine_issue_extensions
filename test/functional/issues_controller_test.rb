@@ -178,8 +178,8 @@ class IssuesControllerTest < ActionController::TestCase
       a_issue
       a_issue
       issue_last_id = Issue.last.id
-      post :bulk_edit, :ids => [issue_last_id - 1, issue_last_id], :issue => {:status_id => 5}
-      assert_response :redirect
+      post :bulk_update, :ids => [issue_last_id - 1, issue_last_id], :issue => {:status_id => '5'}
+      assert_response 302
       issues = Issue.find [issue_last_id - 1, issue_last_id]
       assert_not_nil issues
       issues.each do |issue|

@@ -125,21 +125,19 @@ class IssueExtensionsIssueHooks < Redmine::Hook::Listener
       begin
           output = "<hr />\n"
           output << "<div id=\"issue_extensions_relations\">\n"
-          output << "\t" + link_to(l(:label_add_relation_issue), {:controller => 'issues', :action => 'new', :project_id => project, :relation_issue => issue.id}, :class => 'icon icon-edit' ) + "\n"
+          output << "  " + link_to(l(:label_add_relation_issue), {:controller => 'issues', :action => 'new', :project_id => project, :relation_issue => issue.id}, :class => 'icon icon-edit' ) + "\n"
           output << "</div>\n"
           output << "<div id=\"issue_extensions_search\">\n"
-          output << "\t" + l(:field_subject) + ":"
-          output << text_field_tag("cb_title", cb_subject, :size => 30)
-          output << link_to(l(:button_apply), {:controller => 'issues', :action => 'show', :project_id => project, :cb_subject => cb_subject}, :class => 'icon icon-checked' ) + "\n"
-          output << "\t<fieldset class=\"searched-issues\" inner-droppableid=\"searched-issues\"><legend>" + l(:label_searched_issues) + "</legend>\n"
-          output << "\t\t<ul id=\"ul_searched-issues\" class=\"inner-droppable\">\n"
+          output << "  " + link_to(l(:button_apply), {:controller => 'issues', :action => 'show', :project_id => project, :cb_subject => cb_subject}, :class => 'icon icon-checked') + "\n"
+          output << "  <fieldset class=\"searched-issues\" inner-droppableid=\"searched-issues\"><legend>" + l(:label_searched_issues) + "</legend>\n"
+          output << "    <ul id=\"ul_searched-issues\" class=\"inner-droppable\">\n"
           searched_issues.each do |searched_issue|
-            output << "\t\t\t<li id=issue_" + searched_issue.id + " class=\"draggable\">"
+            output << "      <li id=issue_" + searched_issue.id + " class=\"draggable\">"
             output << "<span class=" + 'moved' if searched_issue.closed? + ">"
             output << searched_issue.issue.tracker.to_s + " #" + searched_issue.id.to_s + ":" + h(searched_issue.subject) + "</li>\n"
             end unless searched_issues.length == 0
-          output << "\t\t</ul>\n"
-          output << "\t</fieldset>\n"
+          output << "    </ul>\n"
+          output << "  </fieldset>\n"
           output << "</div>\n"
           return output
         rescue
