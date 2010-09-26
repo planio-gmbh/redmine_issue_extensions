@@ -12,6 +12,8 @@ This is a plugin for Redmine
 
 4. The relating issues can be easily made.
 
+5. When the issue is relating, issue can be retrieved according to the title.
+
 === Plugin installation
 
 1. Copy the plugin directory into the vendor/plugins directory
