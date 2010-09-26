@@ -83,8 +83,6 @@ class IssuesControllerTest < ActionController::TestCase
         assert_response :success
         assert_template 'new.rhtml'
         assert_tag :input, :attributes => {:id => 'relation_issue_id'}
-#        ,
-#          :descendant => {:tag => 'a', :content => /new/ }
       end
     end
   end
@@ -120,11 +118,22 @@ class IssuesControllerTest < ActionController::TestCase
         assert_template 'show.rhtml'
         assert_tag :div, :attributes => {:id => 'issue_extensions_form'}
         assert_tag :div, :attributes => {:id => 'issue_extensions_search'}
+        assert_tag :input, :attributes => {:id => 'cb_subject', :value => ''}
         assert_tag :fieldset, :attributes => {:class => 'searched-issues'}
         assert_tag :div, :attributes => {:id => 'issue_extensions_relations'}
         assert_tag :a, :attributes => {:class => 'icon icon-edit'}
-#        ,
-#          :descendant => {:tag => 'a', :content => /new/ }
+      end
+      context "input cb_subject" do
+        should "accept get" do
+          a_issue
+          get :show, :id => Issue.last.id, :cb_subject => 'test'
+          assert_response :success
+          assert_template 'show.rhtml'
+          assert_tag :input, :attributes => {:id => 'cb_subject', :value => 'test'}
+          assert_tag :tag => 'ul', :attributes => {:id => 'ul_searched-issues'}, :child => {
+            :tag => 'li'
+          }
+        end
       end
     end
   end
