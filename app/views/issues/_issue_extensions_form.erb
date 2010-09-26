@@ -30,7 +30,7 @@ unless project.module_enabled? :issue_extensions == nil %>
   <p><strong><%= l(:issue_extensions) %></strong></p>
   <div id="issue_extensions_search">
     <% form_tag({:controller => 'issues', :action => 'show', :id => @issue.id}, :method => :get) do %>
-      <%= text_field_tag "cb_subject", cb_subject, :size => 30 %>
+      <%= l(:field_subject) %>:<%= text_field_tag "cb_subject", cb_subject, :size => 30 %>
       <%= submit_tag l(:button_apply) %>
     <% end %>
     <fieldset class="searched-issues" inner-droppableid="searched-issues"><legend><%= l(:label_searched_issues) %></legend>
