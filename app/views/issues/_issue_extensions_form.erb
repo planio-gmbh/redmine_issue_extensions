@@ -1,0 +1,48 @@
+<%
+# Issue Extensions plugin for Redmine
+# Copyright (C) 2010  Takashi Takebayashi
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-%>
+<%
+issue = @issue
+project = Project.find @issue.project_id.to_i
+parameters = request.parameters
+cb_subject = parameters[:cb_subject]
+cb_subject = "" unless cb_subject
+searched_issues = nil
+searched_issues = Issue.find(:all, :conditions => ["subject LIKE (?)", '%' + cb_subject + '%']) unless cb_subject == ""
+unless project.module_enabled? :issue_extensions == nil %>
+<hr />
+<div id="issue_extensions_form">
+  <p><strong><%= l(:issue_extensions) %></strong></p>
+  <div id="issue_extensions_search">
+    <% form_tag({:controller => 'issues', :action => 'show', :id => @issue.id}, :method => :get) do %>
+      <%= text_field_tag "cb_subject", cb_subject, :size => 30 %>
+      <%= submit_tag l(:button_apply) %>
+    <% end %>
+    <fieldset class="searched-issues" inner-droppableid="searched-issues"><legend><%= l(:label_searched_issues) %></legend>
+      <ul id="ul_searched-issues" class="inner-droppable">
+        <% searched_issues.each do |searched_issue|
+        %><li id="issue_<%= searched_issue.id %>" class="draggable"><span class="<%= 'moved' if searched_issue.closed? %>"><%= searched_issue.tracker.to_s + " #" + searched_issue.id.to_s + ":" + h(searched_issue.subject) %></span></li>
+        <%  end unless searched_issues == nil %>
+      </ul>
+    </fieldset>
+  </div>
+  <div id="issue_extensions_relations">
+    <p><%= link_to l(:label_add_relation_issue), {:controller => 'issues', :action => 'new', :project_id => @issue.project_id, :relation_issue => issue.id}, :class => 'icon icon-edit' %></p>
+  </div>
+</div>
+<% end %>
