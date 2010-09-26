@@ -116,21 +116,27 @@ class IssuesControllerTest < ActionController::TestCase
         get :show, :id => Issue.last.id
         assert_response :success
         assert_template 'show.rhtml'
-        assert_tag :div, :attributes => {:id => 'issue_extensions_form'}
-        assert_tag :div, :attributes => {:id => 'issue_extensions_search'}
-        assert_tag :input, :attributes => {:id => 'cb_subject', :value => ''}
-        assert_tag :fieldset, :attributes => {:class => 'searched-issues'}
-        assert_tag :div, :attributes => {:id => 'issue_extensions_relations'}
-        assert_tag :a, :attributes => {:class => 'icon icon-edit'}
+        assert_tag :div, :attributes => {:id => 'issue_extensions_form'}, :child => {
+          :tag => 'div', :attributes => {:id => 'issue_extensions_search'}, :descendant => {
+            :tag => 'input', :attributes => {:id => 'cb_subject', :value => ''}
+          }, :child => {
+            :tag => 'fieldset', :attributes => {:class => 'searched-issues'}
+          }
+        }
+        assert_tag :div, :attributes => {:id => 'issue_extensions_relations'}, :child => {
+          :tag => 'p', :child => {
+            :tag => 'a', :attributes => {:class => 'icon icon-edit'}
+          }
+        }
       end
-      context "input cb_subject" do
+      context "with cb_subject" do
         should "accept get" do
           a_issue
           get :show, :id => Issue.last.id, :cb_subject => 'test'
           assert_response :success
           assert_template 'show.rhtml'
           assert_tag :input, :attributes => {:id => 'cb_subject', :value => 'test'}
-          assert_tag :tag => 'ul', :attributes => {:id => 'ul_searched-issues'}, :child => {
+          assert_tag :ul, :attributes => {:id => 'ul_searched-issues'}, :child => {
             :tag => 'li'
           }
         end
