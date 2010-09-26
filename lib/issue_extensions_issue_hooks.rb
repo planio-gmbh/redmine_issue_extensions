@@ -111,38 +111,8 @@ class IssueExtensionsIssueHooks < Redmine::Hook::Listener
   end
 
   class IssueExtensionsIssueViewListener < Redmine::Hook::ViewListener
-    # 関連したチケットの作成ページへのリンクを追記する
-    def view_issues_show_description_bottom context
-      issue = context[:issue]
-      project = context[:project]
-      return '' unless project
-      request = context[:request]
-      parameters = request.parameters
-      cb_subject = parameters[:cb_subject]
-      cb_subject = "" unless cb_subject
-      searched_issues = nil
-      searched_issues = Issue.find(:all, :conditions => ["subject IN (?)", cb_subject]) if cb_subject
-      begin
-          output = "<hr />\n"
-          output << "<div id=\"issue_extensions_relations\">\n"
-          output << "  " + link_to(l(:label_add_relation_issue), {:controller => 'issues', :action => 'new', :project_id => project, :relation_issue => issue.id}, :class => 'icon icon-edit' ) + "\n"
-          output << "</div>\n"
-          output << "<div id=\"issue_extensions_search\">\n"
-          output << "  " + link_to(l(:button_apply), {:controller => 'issues', :action => 'show', :project_id => project, :cb_subject => cb_subject}, :class => 'icon icon-checked') + "\n"
-          output << "  <fieldset class=\"searched-issues\" inner-droppableid=\"searched-issues\"><legend>" + l(:label_searched_issues) + "</legend>\n"
-          output << "    <ul id=\"ul_searched-issues\" class=\"inner-droppable\">\n"
-          searched_issues.each do |searched_issue|
-            output << "      <li id=issue_" + searched_issue.id + " class=\"draggable\">"
-            output << "<span class=" + 'moved' if searched_issue.closed? + ">"
-            output << searched_issue.issue.tracker.to_s + " #" + searched_issue.id.to_s + ":" + h(searched_issue.subject) + "</li>\n"
-            end unless searched_issues.length == 0
-          output << "    </ul>\n"
-          output << "  </fieldset>\n"
-          output << "</div>\n"
-          return output
-        rescue
-        end unless project.module_enabled? :issue_extensions == nil
-    end
+    # 関連したチケットの作成ページへのリンクとチケット検索表示を追記する
+    render_on :view_issues_show_description_bottom, :partial => 'issues/issue_extensions_form', :multipart => true,  :if => :is_enabled?
 
     # 関連元のチケットのIDを埋め込む
     def view_issues_form_details_bottom context
@@ -156,6 +126,11 @@ class IssueExtensionsIssueHooks < Redmine::Hook::Listener
           return output
         rescue
         end unless project.module_enabled? :issue_extensions == nil
+    end
+
+    private
+    def is_enabled?(context)
+      context[:project].module_enabled? :issue_extensions
     end
   end
 end
