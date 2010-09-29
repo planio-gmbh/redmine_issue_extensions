@@ -129,6 +129,7 @@ class IssuesControllerTest < ActionController::TestCase
           }
         }
       end
+
       context "with cb_subject" do
         should "accept get" do
           a_issue
@@ -137,7 +138,9 @@ class IssuesControllerTest < ActionController::TestCase
           assert_template 'show.rhtml'
           assert_tag :input, :attributes => {:id => 'cb_subject', :value => 'test'}
           assert_tag :ul, :attributes => {:id => 'ul_searched-issues'}, :child => {
-            :tag => 'li'
+            :tag => 'li', :child => {
+              :tag => 'div', :attributes => {:class => 'tooltip'}
+            }
           }
         end
       end

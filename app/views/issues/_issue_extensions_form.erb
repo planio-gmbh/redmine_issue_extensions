@@ -34,10 +34,10 @@ unless project.module_enabled? :issue_extensions == nil %>
       <%= submit_tag l(:button_apply) %>
     <% end %>
     <fieldset class="searched-issues" inner-droppableid="searched-issues"><legend><%= l(:label_searched_issues) %></legend>
-      <ul id="ul_searched-issues" class="inner-droppable">
-        <% searched_issues.each do |searched_issue|
-        %><li id="issue_<%= searched_issue.id %>" class="draggable"><span class="<%= 'moved' if searched_issue.closed? %>"><%= searched_issue.tracker.to_s + " #" + searched_issue.id.to_s + ":" + h(searched_issue.subject) %></span></li>
-        <%  end unless searched_issues == nil %>
+      <ul id="ul_searched-issues" class="inner-droppable"><%
+  searched_issues.each do |searched_issue| %>
+        <li id="issue_<%= searched_issue.id %>" class="draggable"><div class="tooltip"><%= link_to_issue searched_issue %><span class="tip"><%= render_issue_tooltip searched_issue %></span></div></li><%
+  end unless searched_issues == nil %>
       </ul>
     </fieldset>
   </div>
