@@ -5,6 +5,7 @@ ja:
   field_old_status: α
   field_new_status: β
 
+  label_add_relation: 関連付けする
   label_add_relation_issue: このチケットに関連するチケットを作成する
   label_searched_issues: ヒットしたチケット
 

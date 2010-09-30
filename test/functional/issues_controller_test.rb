@@ -130,19 +130,33 @@ class IssuesControllerTest < ActionController::TestCase
         }
       end
 
-      context "with cb_subject" do
-        should "accept get" do
-          a_issue
-          get :show, :id => Issue.last.id, :cb_subject => 'test'
-          assert_response :success
-          assert_template 'show.rhtml'
-          assert_tag :input, :attributes => {:id => 'cb_subject', :value => 'test'}
-          assert_tag :ul, :attributes => {:id => 'ul_searched-issues'}, :child => {
-            :tag => 'li', :child => {
-              :tag => 'div', :attributes => {:class => 'tooltip'}
-            }
+      should "accept get with cb_subject" do
+        a_issue
+        a_issue
+        get :show, :id => Issue.last.id, :cb_subject => 'test'
+        assert_response :success
+        assert_template 'show.rhtml'
+        assert_tag :input, :attributes => {:id => 'cb_subject', :value => 'test'}
+        assert_tag :ul, :attributes => {:id => 'ul_searched-issues'}, :child => {
+          :tag => 'li', :child => {
+            :tag => 'div', :attributes => {:class => 'tooltip'}
           }
-        end
+        }
+      end
+
+      should "accept get with cb_subject and relation_to" do
+        a_issue
+        a_issue
+        issue_last_id = Issue.last.id
+        get :show, :id => issue_last_id - 1, :cb_subject => 'test', :relation_to => issue_last_id
+        assert_response :success
+        assert_template 'show.rhtml'
+        assert_tag :input, :attributes => {:id => 'cb_subject', :value => 'test'}
+        issue_relation = IssueRelation.find IssueRelation.last.id
+        assert_not_nil issue_relation
+        assert_equal issue_relation.relation_type, IssueRelation::TYPE_RELATES
+        assert_equal issue_last_id - 1, issue_relation.issue_from_id
+        assert_equal issue_last_id, issue_relation.issue_to_id
       end
     end
   end
