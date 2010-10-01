@@ -24,27 +24,7 @@ unless project.module_enabled? :issue_extensions == nil
   cb_subject = parameters[:cb_subject]
   cb_subject = "" unless cb_subject
   searched_issues = nil
-  searched_issues = Issue.find(:all, :conditions => ["project_id = ? AND subject LIKE (?)", @issue.project_id, '%' + cb_subject + '%']) unless cb_subject == ""
-  unless parameters[:relation_to] == nil || @issue.id == parameters[:relation_to].to_i
-    issue_from_id = @issue.id <=> parameters[:relation_to].to_i ? @issue.id : parameters[:relation_to].to_i
-    issue_to_id = @issue.id <=> parameters[:relation_to].to_i ? parameters[:relation_to].to_i : @issue.id
-    issue_from = Issue.find :first, :conditions =>["id = (?)", issue_from_id]
-    issue_to = Issue.find :first, :conditions =>["id = (?)", issue_to_id]
-    unless issue_from == nil || issue_to == nil || (issue_from.project_id != issue_to.project_id && Setting.cross_project_issue_relations?) || issue_from.is_descendant_of?(issue_to) || issue_from.is_ancestor_of?(issue_to)
-      relation = IssueRelation.find :first, :conditions => ["issue_from_id = ? AND issue_to_id = ?", issue_from_id, issue_to_id]
-      if relation == nil
-        begin
-          relation = IssueRelation.new
-          relation.relation_type = IssueRelation::TYPE_RELATES
-          relation.issue_from_id = issue_from_id
-          relation.issue_to_id = issue_to_id
-          relation.save!
-        rescue
-          # エラーハンドリングはしない(画面にエラー表示しない)
-        end
-      end
-    end
-  end %>
+  searched_issues = Issue.find(:all, :conditions => ["project_id = ? AND subject LIKE (?)", @issue.project_id, '%' + cb_subject + '%']) unless cb_subject == "" %>
 <hr />
 <div id="issue_extensions_form">
   <p><strong><%= l(:issue_extensions) %></strong></p>
@@ -57,7 +37,11 @@ unless project.module_enabled? :issue_extensions == nil
       <ul id="ul_searched-issues" class="inner-droppable"><%
   searched_issues.each do |searched_issue|
     unless @issue.id == searched_issue.id %>
-        <li id="issue_<%= searched_issue.id %>" class="draggable"><div class="tooltip"><%= link_to_issue searched_issue %><span class="tip"><%= render_issue_tooltip searched_issue %></span><%= link_to l(:label_add_relation), {:controller => 'issues', :action => 'show', :id => @issue.id, :cb_subject => cb_subject, :relation_to => searched_issue.id}, :class => 'icon icon-edit' %></div></li><%
+        <li id="issue_<%= searched_issue.id %>" class="draggable"><div class="tooltip"><%=
+      link_to_remote image_tag('edit.png') + l(:label_add_relation), {
+        :url => {:controller => 'issue_relations', :action => 'new', :issue_id => @issue, :id => @issue.id, :relation => {:relation_type => 'relates', :issue_to_id => searched_issue.id}},
+        :method => :post
+      }, :title => l(:label_add_relation) %><%= link_to_issue searched_issue %><span class="tip"><%= render_issue_tooltip searched_issue %></span></div></li><%
     end
   end unless searched_issues == nil %>
       </ul>

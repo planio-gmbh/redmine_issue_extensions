@@ -143,21 +143,6 @@ class IssuesControllerTest < ActionController::TestCase
           }
         }
       end
-
-      should "accept get with cb_subject and relation_to" do
-        a_issue
-        a_issue
-        issue_last_id = Issue.last.id
-        get :show, :id => issue_last_id - 1, :cb_subject => 'test', :relation_to => issue_last_id
-        assert_response :success
-        assert_template 'show.rhtml'
-        assert_tag :input, :attributes => {:id => 'cb_subject', :value => 'test'}
-        issue_relation = IssueRelation.find IssueRelation.last.id
-        assert_not_nil issue_relation
-        assert_equal issue_relation.relation_type, IssueRelation::TYPE_RELATES
-        assert_equal issue_last_id - 1, issue_relation.issue_from_id
-        assert_equal issue_last_id, issue_relation.issue_to_id
-      end
     end
   end
 
@@ -190,20 +175,6 @@ class IssuesControllerTest < ActionController::TestCase
       assert_equal 2, watcher.user_id
       assert_equal 'Issue', watcher.watchable_type
     end
-
-#    should "ignore post with 'バグ' tracker and '終了' status" do
-#      a_issue
-#      Trackers.generate! :name => 'バグ', :is_in_chlog => true, :position => 4
-#      IssueStatus.generate! :name => '終了', :is_default => false, :is_closed => true
-#      put :update, :id => Issue.last.id,
-#        :issue => {:tracker_id => 4,
-#                   :status_id => IssueStatus.last.id}
-#      assert_redirected_to :action => 'show', :id => Issue.last.id
-#      watcher = Watcher.find :first, :conditions => ["watchable_id = (?)", Issue.last.id]
-#      assert_not_nil watcher
-#      assert_equal 2, watcher.user_id
-#      assert_equal 'Issue', watcher.watchable_type
-#    end
   end
 
   context "#bulk_edit" do
