@@ -2,6 +2,8 @@
 en:
   issue_extensions: Issue Extensions
 
+  button_oneself_is_chosen: Oneself is chosen
+
   field_old_status: Alpha
   field_new_status: Beta
 

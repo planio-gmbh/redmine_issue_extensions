@@ -113,20 +113,8 @@ class IssueExtensionsIssueHooks < Redmine::Hook::Listener
   class IssueExtensionsIssueViewListener < Redmine::Hook::ViewListener
     # 関連したチケットの作成ページへのリンクとチケット検索表示を追記する
     render_on :view_issues_show_description_bottom, :partial => 'issues/issue_extensions_form', :multipart => true,  :if => :is_enabled?
-
-    # 関連元のチケットのIDを埋め込む
-    def view_issues_form_details_bottom context
-      project = context[:project]
-      request = context[:request]
-      parameters = request.parameters
-      relation_issue = parameters[:relation_issue]
-      return '' unless relation_issue
-      begin
-          output = hidden_field_tag :relation_issue_id, relation_issue
-          return output
-        rescue
-        end unless project.module_enabled? :issue_extensions == nil
-    end
+    # 関連元のチケットのID埋め込みと「自分を選ぶ」ボタンを追記する
+    render_on :view_issues_form_details_bottom, :partial => 'issues/issue_extensions_view_issues_form_details_bottom', :multipart => true,  :if => :is_enabled?
 
     private
     def is_enabled?(context)

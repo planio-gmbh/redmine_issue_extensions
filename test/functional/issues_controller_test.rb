@@ -77,12 +77,26 @@ class IssuesControllerTest < ActionController::TestCase
   context "#new" do
     context "by member" do
       should "accept get" do
-        a_issue
-        get :new, :project_id => 1,
-          :relation_issue => Issue.last.id
+        get :new, :project_id => 1
         assert_response :success
         assert_template 'new.rhtml'
-        assert_tag :input, :attributes => {:id => 'relation_issue_id'}
+        assert_tag :div, :attributes => {:id => 'issue_extensions_form'}, :child => {
+          :tag => 'input', :attributes => {:id => 'relation_issue_id'}
+        }
+        assert_tag :div, :attributes => {:id => 'issue_extensions_form'}, :child => {
+          :tag => 'input', :attributes => {:name => 'commit', :type => 'button'}
+        }
+      end
+
+      context "with relation issue" do
+        should "accept get" do
+          a_issue
+          get :new, :project_id => 1,
+            :relation_issue => Issue.last.id
+          assert_response :success
+          assert_template 'new.rhtml'
+          assert_tag :input, :attributes => {:id => 'relation_issue_id', :value => Issue.last.id}
+        end
       end
     end
   end

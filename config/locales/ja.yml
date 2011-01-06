@@ -2,6 +2,8 @@
 ja:
   issue_extensions: Issue Extensions
 
+  button_oneself_is_chosen: 自分を選ぶ
+
   field_old_status: α
   field_new_status: β
 
