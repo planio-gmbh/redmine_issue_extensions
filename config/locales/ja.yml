@@ -2,7 +2,7 @@
 ja:
   issue_extensions: Issue Extensions
 
-  button_oneself_is_chosen: 自分を選ぶ
+  button_assigned_to_oneself: 自分を担当者にする
 
   field_old_status: α
   field_new_status: β

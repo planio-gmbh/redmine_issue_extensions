@@ -14,7 +14,7 @@ This is a plugin for Redmine
 
 5. When the issue is relating, issue can be retrieved according to the title.
 
-6. When the issue is created, assigned to the person is set to the issue by clicking [Oneself is chosen] button.
+6. When the issue is created, assigned to oneself by clicking [Assigned to oneself] button.
 
 === Plugin installation
 

@@ -2,7 +2,7 @@
 en:
   issue_extensions: Issue Extensions
 
-  button_oneself_is_chosen: Oneself is chosen
+  button_assigned_to_oneself: Assigned to oneself
 
   field_old_status: Alpha
   field_new_status: Beta

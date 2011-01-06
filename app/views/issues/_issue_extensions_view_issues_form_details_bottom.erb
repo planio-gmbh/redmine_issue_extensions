@@ -23,7 +23,7 @@ unless project.module_enabled? :issue_extensions == nil
 <div id="issue_extensions_form">
   <strong><%= l(:issue_extensions) %></strong><br />
   <%= hidden_field_tag :relation_issue_id, parameters[:relation_issue] %>
-  <%= submit_tag l(:button_oneself_is_chosen), {:type => 'button', :onClick => 'selectOneself()'} %>
+  <%= submit_tag l(:button_assigned_to_oneself), {:type => 'button', :onClick => 'selectOneself()'} %>
   <script type="text/javascript">
   function selectOneself() {
     // プルダウンオブジェクトを取得する
