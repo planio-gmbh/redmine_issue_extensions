@@ -86,9 +86,6 @@ class IssuesControllerTest < ActionController::TestCase
         assert_tag :div, :attributes => {:id => 'issue_extensions_form'}, :child => {
           :tag => 'input', :attributes => {:id => 'relation_issue_id'}
         }
-        assert_tag :div, :attributes => {:id => 'issue_extensions_form'}, :child => {
-          :tag => 'input', :attributes => {:type => 'button', :name => 'commit', :value => l(:button_assigned_to_oneself), :onclick => 'selectOneself()'}
-        }
       end
 
       context "with relation issue" do
