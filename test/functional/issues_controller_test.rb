@@ -21,6 +21,9 @@ require 'issues_controller'
 class IssuesController; def rescue_action(e) raise e end; end
 
 class IssuesControllerTest < ActionController::TestCase
+  include ApplicationHelper
+  include ActionView::Helpers::TextHelper
+
   fixtures :projects,
             :users,
             :roles,
@@ -84,7 +87,7 @@ class IssuesControllerTest < ActionController::TestCase
           :tag => 'input', :attributes => {:id => 'relation_issue_id'}
         }
         assert_tag :div, :attributes => {:id => 'issue_extensions_form'}, :child => {
-          :tag => 'input', :attributes => {:name => 'commit', :type => 'button'}
+          :tag => 'input', :attributes => {:type => 'button', :name => 'commit', :value => l(:button_assigned_to_oneself), :onclick => 'selectOneself()'}
         }
       end
 
