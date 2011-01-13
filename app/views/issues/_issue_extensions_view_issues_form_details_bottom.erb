@@ -16,8 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -%><%
-project = Project.find @issue.project_id
-unless project.module_enabled? :issue_extensions == nil
+if IssueExtensionsUtil.is_enabled?(project) -%><%
   parameters = request.parameters %>
 <hr />
 <div id="issue_extensions_form">
