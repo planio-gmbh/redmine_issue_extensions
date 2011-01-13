@@ -21,10 +21,12 @@ unless project.module_enabled? :issue_extensions == nil
   parameters = request.parameters %>
 <hr />
 <div id="issue_extensions_form">
+  <strong><%= l(:issue_extensions) %></strong><br />
   <%= hidden_field_tag :relation_issue_id, parameters[:relation_issue] %>
+  <%= submit_tag l(:button_assigned_to_oneself), {:type => 'button', :onClick => 'selectOneself()'} %>
   <script type="text/javascript">
     function selectOneself() {
-      /* プルダウンオブジェクト取得 */
+      // プルダウンオブジェクトを取得する
       var options = document.getElementById('issue_assigned_to_id');
       var oneself_value = '<%= User.current.id %>'
       for (var i = 0; i < options.length; i++){
@@ -35,20 +37,6 @@ unless project.module_enabled? :issue_extensions == nil
         }
       }
     }
-
-    function onload_assigned_to_oneself() {
-      var select_assigned = document.getElementById('issue_assigned_to_id');
-      /* input要素生成 */
-      var input_assigned_to_oneself = document.createElement("input");
-      input_assigned_to_oneself.setAttribute("id", "assigned_to_oneself");
-      input_assigned_to_oneself.setAttribute("name", "commit");
-      input_assigned_to_oneself.setAttribute("type", "button");
-      input_assigned_to_oneself.setAttribute("value", "<%= l(:button_assigned_to_oneself) %>");
-      input_assigned_to_oneself.setAttribute("onclick", "selectOneself()");
-      /* プルダウンオブジェクトの親要素へ追加 */
-      select_assigned.parentNode.appendChild(input_assigned_to_oneself);
-    }
-    window.onload = onload_assigned_to_oneself();
   </script>
 </div><%
 end %>
