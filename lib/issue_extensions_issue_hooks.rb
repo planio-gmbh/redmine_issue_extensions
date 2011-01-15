@@ -27,7 +27,7 @@ class IssueExtensionsIssueHooks < Redmine::Hook::Listener
   def controller_issues_edit_before_save context
     issue = context[:issue]
     project = Project.find issue[:project_id].to_i
-    unless project.module_enabled? :issue_extensions == nil
+    if IssueExtensionsUtil.is_enabled?(project)
       issue_status_assigned context
       issue_status_closed context
       issue_added_watcher context
@@ -38,7 +38,7 @@ class IssueExtensionsIssueHooks < Redmine::Hook::Listener
     issue = context[:issue]
     params = context[:params]
     project = Project.find issue[:project_id].to_i
-    unless project.module_enabled? :issue_extensions == nil
+    if IssueExtensionsUtil.is_enabled?(project)
       # Redmine 0.9.3 では、呼び元で issue[:status_id] に params[:status_id] の値を設定しない為、対応
       issue[:status_id] = params[:status_id].blank? ? issue[:status_id] : params[:status_id]
       context[:issue] = issue
@@ -49,7 +49,7 @@ class IssueExtensionsIssueHooks < Redmine::Hook::Listener
   def controller_issues_new_after_save context
     issue = context[:issue]
     project = Project.find issue[:project_id].to_i
-    unless project.module_enabled? :issue_extensions == nil
+    if IssueExtensionsUtil.is_enabled?(project)
       issue_added_relation context
     end
   end
@@ -98,15 +98,13 @@ class IssueExtensionsIssueHooks < Redmine::Hook::Listener
   def issue_added_relation context
     issue = context[:issue]
     params = context[:params]
-    unless params[:relation_issue_id] == nil
-      from_issue = Issue.find :first, :conditions =>["id = (?)", params[:relation_issue_id].to_i]
-      unless from_issue == nil
-        relation = IssueRelation.new
-        relation.relation_type = IssueRelation::TYPE_RELATES
-        relation.issue_from_id = params[:relation_issue_id]
-        relation.issue_to_id = issue.id
-        relation.save!
-      end
+    from_issue = Issue.find :first, :conditions =>["id = (?)", params[:relation_issue_id].to_i]
+    unless from_issue == nil
+      relation = IssueRelation.new
+      relation.relation_type = IssueRelation::TYPE_RELATES
+      relation.issue_from_id = params[:relation_issue_id]
+      relation.issue_to_id = issue.id
+      relation.save!
     end
   end
 

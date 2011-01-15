@@ -53,7 +53,6 @@ class IssuesControllerTest < ActionController::TestCase
     @controller = IssuesController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
-    EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
     @request.session[:user_id] = 2
   end
 
@@ -79,13 +78,37 @@ class IssuesControllerTest < ActionController::TestCase
 
   context "#new" do
     context "by member" do
+      context "and module" do
+        setup do
+          EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
+        end
+
+        should "accept get" do
+          get :new, :project_id => 1
+          assert_response :success
+          assert_template 'new.rhtml'
+          assert_tag :div, :attributes => {:id => 'issue_extensions_form'}, :child => {
+            :tag => 'input', :attributes => {:id => 'relation_issue_id'}
+          }
+        end
+
+        context "with relation issue" do
+          should "accept get" do
+            a_issue
+            get :new, :project_id => 1,
+              :relation_issue => Issue.last.id
+            assert_response :success
+            assert_template 'new.rhtml'
+            assert_tag :input, :attributes => {:id => 'relation_issue_id', :value => Issue.last.id}
+          end
+        end
+      end
+
       should "accept get" do
         get :new, :project_id => 1
         assert_response :success
         assert_template 'new.rhtml'
-        assert_tag :div, :attributes => {:id => 'issue_extensions_form'}, :child => {
-          :tag => 'input', :attributes => {:id => 'relation_issue_id'}
-        }
+        assert_select "div.issue_extensions_form", false
       end
 
       context "with relation issue" do
@@ -95,15 +118,43 @@ class IssuesControllerTest < ActionController::TestCase
             :relation_issue => Issue.last.id
           assert_response :success
           assert_template 'new.rhtml'
-          assert_tag :input, :attributes => {:id => 'relation_issue_id', :value => Issue.last.id}
+          assert_select "div.issue_extensions_form", false
         end
       end
     end
   end
 
   context "#create" do
-    should "accept post with relation issue" do
+    context "and module" do
+      setup do
+        EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
+      end
+
+      should "accept post with relation issue" do
+        assert_difference 'Issue.count' do
+          post :create, :project_id => 1,
+            :relation_issue_id => Issue.last.id,
+            :issue => {:tracker_id => 3,
+                       :status_id => 2,
+                       :subject => 'This is the test relation issue',
+                       :description => 'This is the description',
+                       :priority_id => 5,
+                       :estimated_hours => ''}
+        end
+        assert_redirected_to :controller => 'issues', :action => 'show', :id => Issue.last.id
+        issue_relation = IssueRelation.find IssueRelation.last.id
+        assert_not_nil issue_relation
+        assert_equal issue_relation.relation_type, IssueRelation::TYPE_RELATES
+        assert_equal Issue.last.id - 1, issue_relation.issue_from_id
+        assert_equal Issue.last.id, issue_relation.issue_to_id
+      end
+    end
+
+    setup do
       a_issue
+    end
+
+    should "accept post with relation issue" do
       assert_difference 'Issue.count' do
         post :create, :project_id => 1,
           :relation_issue_id => Issue.last.id,
@@ -115,86 +166,160 @@ class IssuesControllerTest < ActionController::TestCase
                      :estimated_hours => ''}
       end
       assert_redirected_to :controller => 'issues', :action => 'show', :id => Issue.last.id
-      issue_relation = IssueRelation.find IssueRelation.last.id
-      assert_not_nil issue_relation
-      assert_equal issue_relation.relation_type, IssueRelation::TYPE_RELATES
-      assert_equal Issue.last.id - 1, issue_relation.issue_from_id
-      assert_equal Issue.last.id, issue_relation.issue_to_id
+      issue_relation = IssueRelation.find(:first, :conditions => ["issue_from_id = (?)", Issue.last.id])
+      assert_nil issue_relation
     end
   end
 
   context "#show" do
     context "by member" do
-      should "accept get" do
+      context "and module" do
+        setup do
+          EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
+        end
+
+        should "accept get" do
+          get :show, :id => Issue.last.id
+          assert_response :success
+          assert_template 'show.rhtml'
+          assert_tag :div, :attributes => {:id => 'issue_extensions_form'}, :child => {
+            :tag => 'div', :attributes => {:id => 'issue_extensions_search'}, :descendant => {
+              :tag => 'input', :attributes => {:id => 'cb_subject', :value => ''}
+            }, :child => {
+              :tag => 'fieldset', :attributes => {:class => 'searched-issues'}
+            }
+          }
+          assert_tag :div, :attributes => {:id => 'issue_extensions_relations'}, :child => {
+            :tag => 'p', :child => {
+              :tag => 'a', :attributes => {:class => 'icon icon-edit'}
+            }
+          }
+        end
+
+        should "accept get with cb_subject" do
+          a_issue
+          get :show, :id => Issue.last.id, :cb_subject => 'test'
+          assert_response :success
+          assert_template 'show.rhtml'
+          assert_tag :input, :attributes => {:id => 'cb_subject', :value => 'test'}
+          assert_tag :ul, :attributes => {:id => 'ul_searched-issues'}, :child => {
+            :tag => 'li', :child => {
+              :tag => 'div', :attributes => {:class => 'tooltip'}
+            }
+          }
+        end
+      end
+
+      setup do
         a_issue
+      end
+
+      should "accept get" do
         get :show, :id => Issue.last.id
         assert_response :success
         assert_template 'show.rhtml'
-        assert_tag :div, :attributes => {:id => 'issue_extensions_form'}, :child => {
-          :tag => 'div', :attributes => {:id => 'issue_extensions_search'}, :descendant => {
-            :tag => 'input', :attributes => {:id => 'cb_subject', :value => ''}
-          }, :child => {
-            :tag => 'fieldset', :attributes => {:class => 'searched-issues'}
-          }
-        }
-        assert_tag :div, :attributes => {:id => 'issue_extensions_relations'}, :child => {
-          :tag => 'p', :child => {
-            :tag => 'a', :attributes => {:class => 'icon icon-edit'}
-          }
-        }
+        assert_select "div.issue_extensions_form", false
+        assert_select "div.issue_extensions_relations", false
       end
 
       should "accept get with cb_subject" do
         a_issue
-        a_issue
         get :show, :id => Issue.last.id, :cb_subject => 'test'
         assert_response :success
         assert_template 'show.rhtml'
-        assert_tag :input, :attributes => {:id => 'cb_subject', :value => 'test'}
-        assert_tag :ul, :attributes => {:id => 'ul_searched-issues'}, :child => {
-          :tag => 'li', :child => {
-            :tag => 'div', :attributes => {:class => 'tooltip'}
-          }
-        }
+        assert_select "div.issue_extensions_form", false
+        assert_select "div.issue_extensions_relations", false
       end
     end
   end
 
   context "#update" do
-    should "accept post with status_assigned and watcher" do
+    context "and module" do
+      setup do
+        EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
+      end
+
+      should "accept post with status_assigned and watcher" do
+        a_issue_extensions_status_flow
+        put :update, :id => Issue.last.id,
+          :issue => {:assigned_to_id => 2}
+        assert_redirected_to :action => 'show', :id => Issue.last.id
+        issue = Issue.find Issue.last.id
+        assert_not_nil issue
+        assert_equal 2, issue.status_id
+        watcher = Watcher.find :first, :conditions => ["watchable_id = (?)", Issue.last.id]
+        assert_not_nil watcher
+        assert_equal 2, watcher.user_id
+        assert_equal 'Issue', watcher.watchable_type
+      end
+
+      should "accept post with done_ratio 100 and watcher" do
+        put :update, :id => Issue.last.id,
+          :issue => {:status_id => 5}
+        assert_redirected_to :action => 'show', :id => Issue.last.id
+        issue = Issue.find Issue.last.id
+        assert_not_nil issue
+        assert_equal 100, issue.done_ratio
+        watcher = Watcher.find :first, :conditions => ["watchable_id = (?)", Issue.last.id]
+        assert_not_nil watcher
+        assert_equal 2, watcher.user_id
+        assert_equal 'Issue', watcher.watchable_type
+      end
+    end
+
+    setup do
       a_issue
+    end
+
+    should "accept post with status_assigned and watcher" do
       a_issue_extensions_status_flow
       put :update, :id => Issue.last.id,
         :issue => {:assigned_to_id => 2}
       assert_redirected_to :action => 'show', :id => Issue.last.id
       issue = Issue.find Issue.last.id
       assert_not_nil issue
-      assert_equal 2, issue.status_id
+      assert_not_equal 2, issue.status_id
       watcher = Watcher.find :first, :conditions => ["watchable_id = (?)", Issue.last.id]
-      assert_not_nil watcher
-      assert_equal 2, watcher.user_id
-      assert_equal 'Issue', watcher.watchable_type
+      assert_nil watcher
     end
 
     should "accept post with done_ratio 100 and watcher" do
-      a_issue
       put :update, :id => Issue.last.id,
         :issue => {:status_id => 5}
       assert_redirected_to :action => 'show', :id => Issue.last.id
       issue = Issue.find Issue.last.id
       assert_not_nil issue
-      assert_equal 100, issue.done_ratio
+      assert_not_equal 100, issue.done_ratio
       watcher = Watcher.find :first, :conditions => ["watchable_id = (?)", Issue.last.id]
-      assert_not_nil watcher
-      assert_equal 2, watcher.user_id
-      assert_equal 'Issue', watcher.watchable_type
+      assert_nil watcher
     end
   end
 
   context "#bulk_edit" do
+    context "and module" do
+      setup do
+        EnabledModule.generate! :project_id => 1, :name => 'issue_extensions'
+      end
+
+      should "accept posts with done_ratio 100" do
+        issue_last_id = Issue.last.id
+        post :bulk_update, :ids => [issue_last_id - 1, issue_last_id], :issue => {:status_id => '5'}
+        assert_response 302
+        issues = Issue.find [issue_last_id - 1, issue_last_id]
+        assert_not_nil issues
+        issues.each do |issue|
+          assert_equal 5, issue.status_id
+          assert_equal 100, issue.done_ratio
+        end
+      end
+    end
+
+    setup do
+      a_issue
+      a_issue
+    end
+
     should "accept posts with done_ratio 100" do
-      a_issue
-      a_issue
       issue_last_id = Issue.last.id
       post :bulk_update, :ids => [issue_last_id - 1, issue_last_id], :issue => {:status_id => '5'}
       assert_response 302
@@ -202,7 +327,7 @@ class IssuesControllerTest < ActionController::TestCase
       assert_not_nil issues
       issues.each do |issue|
         assert_equal 5, issue.status_id
-        assert_equal 100, issue.done_ratio
+        assert_not_equal 100, issue.done_ratio
       end
     end
   end

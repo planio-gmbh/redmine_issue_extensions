@@ -15,11 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
--%>
-<%
-issue = @issue
-project = Project.find @issue.project_id
-unless project.module_enabled? :issue_extensions == nil
+if IssueExtensionsUtil.is_enabled?(project) -%><%
   parameters = request.parameters
   cb_subject = parameters[:cb_subject]
   cb_subject = "" unless cb_subject
@@ -50,5 +46,5 @@ unless project.module_enabled? :issue_extensions == nil
   <div id="issue_extensions_relations">
     <p><%= link_to l(:label_add_relation_issue), {:controller => 'issues', :action => 'new', :project_id => @issue.project_id, :relation_issue => issue.id}, :class => 'icon icon-edit' %></p>
   </div>
-</div>
-<% end %>
+</div><%
+end %>
