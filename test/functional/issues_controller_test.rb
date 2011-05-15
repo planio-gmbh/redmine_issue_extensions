@@ -1,5 +1,5 @@
 # Issue Extensions plugin for Redmine
-# Copyright (C) 2010  Takashi Takebayashi
+# Copyright (C) 2010-2011  Takashi Takebayashi
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -87,9 +87,7 @@ class IssuesControllerTest < ActionController::TestCase
           get :new, :project_id => 1
           assert_response :success
           assert_template 'new.rhtml'
-          assert_tag :div, :attributes => {:id => 'issue_extensions_form'}, :child => {
-            :tag => 'input', :attributes => {:id => 'relation_issue_id'}
-          }
+          assert_select "div[id='issue_extensions_form'] input[id='relation_issue_id']"
         end
 
         context "with relation issue" do
@@ -99,7 +97,9 @@ class IssuesControllerTest < ActionController::TestCase
               :relation_issue => Issue.last.id
             assert_response :success
             assert_template 'new.rhtml'
-            assert_tag :input, :attributes => {:id => 'relation_issue_id', :value => Issue.last.id}
+            assert_select "input[id='relation_issue_id']" do
+              assert_select "[value=" + Issue.last.id.to_s + "]"
+            end
           end
         end
       end
@@ -182,18 +182,11 @@ class IssuesControllerTest < ActionController::TestCase
           get :show, :id => Issue.last.id
           assert_response :success
           assert_template 'show.rhtml'
-          assert_tag :div, :attributes => {:id => 'issue_extensions_form'}, :child => {
-            :tag => 'div', :attributes => {:id => 'issue_extensions_search'}, :descendant => {
-              :tag => 'input', :attributes => {:id => 'cb_subject', :value => ''}
-            }, :child => {
-              :tag => 'fieldset', :attributes => {:class => 'searched-issues'}
-            }
-          }
-          assert_tag :div, :attributes => {:id => 'issue_extensions_relations'}, :child => {
-            :tag => 'p', :child => {
-              :tag => 'a', :attributes => {:class => 'icon icon-edit'}
-            }
-          }
+          assert_select "div[id='issue_extensions_form'] div[id='issue_extensions_search'] input[id='cb_subject']" do
+            assert_select "[value='']"
+          end
+          assert_select "div[id='issue_extensions_form'] div[id='issue_extensions_search'] fieldset.searched-issues"
+          assert_select "div[id='issue_extensions_relations'] p a[class='icon icon-edit']"
         end
 
         should "accept get with cb_subject" do
@@ -201,12 +194,10 @@ class IssuesControllerTest < ActionController::TestCase
           get :show, :id => Issue.last.id, :cb_subject => 'test'
           assert_response :success
           assert_template 'show.rhtml'
-          assert_tag :input, :attributes => {:id => 'cb_subject', :value => 'test'}
-          assert_tag :ul, :attributes => {:id => 'ul_searched-issues'}, :child => {
-            :tag => 'li', :child => {
-              :tag => 'div', :attributes => {:class => 'tooltip'}
-            }
-          }
+          assert_select "input[id='cb_subject']" do
+            assert_select "[value='test']"
+          end
+          assert_select "ul[id='ul_searched-issues'] li div.tooltip"
         end
       end
 

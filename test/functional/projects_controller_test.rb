@@ -1,5 +1,5 @@
 # Issue Extensions plugin for Redmine
-# Copyright (C) 2010  Takashi Takebayashi
+# Copyright (C) 2010-2011  Takashi Takebayashi
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -56,20 +56,14 @@ class ProjectsControllerTest < ActionController::TestCase
           get :settings, :id => 1
           assert_response :success
           assert_template 'settings'
-          assert_no_tag :div, :attributes => {:class => 'tabs'},
-            :descendant => {:tag => 'ul',
-              :descendant => {:tag => 'li',
-                :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+          assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
         end
 
         should "not exist tag id post" do
           post :settings, :id => 1
           assert_response :success
           assert_template 'settings'
-          assert_no_tag :div, :attributes => {:class => 'tabs'},
-            :descendant => {:tag => 'ul',
-              :descendant => {:tag => 'li',
-                :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+          assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
         end
 
         context "and module" do
@@ -81,20 +75,14 @@ class ProjectsControllerTest < ActionController::TestCase
             get :settings, :id => 1
             assert_response :success
             assert_template 'settings'
-            assert_no_tag :div, :attributes => {:class => 'tabs'},
-              :descendant => {:tag => 'ul',
-                :descendant => {:tag => 'li',
-                  :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+            assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
           end
 
           should "not exist tag id post" do
             post :settings, :id => 1
             assert_response :success
             assert_template 'settings'
-            assert_no_tag :div, :attributes => {:class => 'tabs'},
-              :descendant => {:tag => 'ul',
-                :descendant => {:tag => 'li',
-                  :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+            assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
           end
         end
       end
@@ -124,20 +112,14 @@ class ProjectsControllerTest < ActionController::TestCase
           get :settings, :id => 1
           assert_response :success
           assert_template 'settings'
-          assert_no_tag :div, :attributes => {:class => 'tabs'},
-            :descendant => {:tag => 'ul',
-              :descendant => {:tag => 'li',
-                :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+          assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
         end
 
         should "not exist tag id post" do
           post :settings, :id => 1
           assert_response :success
           assert_template 'settings'
-          assert_no_tag :div, :attributes => {:class => 'tabs'},
-            :descendant => {:tag => 'ul',
-              :descendant => {:tag => 'li',
-                :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+          assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
         end
 
         context "and module" do
@@ -149,20 +131,14 @@ class ProjectsControllerTest < ActionController::TestCase
             get :settings, :id => 1
             assert_response :success
             assert_template 'settings'
-            assert_no_tag :div, :attributes => {:class => 'tabs'},
-              :descendant => {:tag => 'ul',
-                :descendant => {:tag => 'li',
-                  :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+            assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
           end
 
           should "not exist tag id post" do
             post :settings, :id => 1
             assert_response :success
             assert_template 'settings'
-            assert_no_tag :div, :attributes => {:class => 'tabs'},
-              :descendant => {:tag => 'ul',
-                :descendant => {:tag => 'li',
-                  :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+            assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
           end
         end
       end
@@ -178,20 +154,14 @@ class ProjectsControllerTest < ActionController::TestCase
         get :settings, :id => 1
         assert_response :success
         assert_template 'settings'
-        assert_no_tag :div, :attributes => {:class => 'tabs'},
-          :descendant => {:tag => 'ul',
-            :descendant => {:tag => 'li',
-              :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+        assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
       end
 
       should "not exist tag id post" do
         get :settings, :id => 1
         assert_response :success
         assert_template 'settings'
-        assert_no_tag :div, :attributes => {:class => 'tabs'},
-          :descendant => {:tag => 'ul',
-            :descendant => {:tag => 'li',
-              :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+        assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
       end
 
       context "with permission" do
@@ -203,20 +173,14 @@ class ProjectsControllerTest < ActionController::TestCase
           get :settings, :id => 1
           assert_response :success
           assert_template 'settings'
-          assert_no_tag :div, :attributes => {:class => 'tabs'},
-            :descendant => {:tag => 'ul',
-              :descendant => {:tag => 'li',
-                :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+          assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
         end
 
         should "not exist tag id post" do
           post :settings, :id => 1
           assert_response :success
           assert_template 'settings'
-          assert_no_tag :div, :attributes => {:class => 'tabs'},
-            :descendant => {:tag => 'ul',
-              :descendant => {:tag => 'li',
-                :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+          assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
         end
 
         context "and module" do
@@ -228,20 +192,14 @@ class ProjectsControllerTest < ActionController::TestCase
             get :settings, :id => 1
             assert_response :success
             assert_template 'settings'
-            assert_no_tag :div, :attributes => {:class => 'tabs'},
-              :descendant => {:tag => 'ul',
-                :descendant => {:tag => 'li',
-                  :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+            assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
           end
 
           should "not exist tag id post" do
             post :settings, :id => 1
             assert_response :success
             assert_template 'settings'
-            assert_no_tag :div, :attributes => {:class => 'tabs'},
-              :descendant => {:tag => 'ul',
-                :descendant => {:tag => 'li',
-                  :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+            assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
           end
         end
       end
@@ -257,20 +215,14 @@ class ProjectsControllerTest < ActionController::TestCase
         get :settings, :id => 1
         assert_response :success
         assert_template 'settings'
-        assert_no_tag :div, :attributes => {:class => 'tabs'},
-          :descendant => {:tag => 'ul',
-            :descendant => {:tag => 'li',
-              :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+        assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
       end
 
       should "not exist tag id post" do
         get :settings, :id => 1
         assert_response :success
         assert_template 'settings'
-        assert_no_tag :div, :attributes => {:class => 'tabs'},
-          :descendant => {:tag => 'ul',
-            :descendant => {:tag => 'li',
-              :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+        assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
       end
 
       context "with permission" do
@@ -282,20 +234,14 @@ class ProjectsControllerTest < ActionController::TestCase
           get :settings, :id => 1
           assert_response :success
           assert_template 'settings'
-          assert_no_tag :div, :attributes => {:class => 'tabs'},
-            :descendant => {:tag => 'ul',
-              :descendant => {:tag => 'li',
-                :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+          assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
         end
 
         should "not exist tag id post" do
           post :settings, :id => 1
           assert_response :success
           assert_template 'settings'
-          assert_no_tag :div, :attributes => {:class => 'tabs'},
-            :descendant => {:tag => 'ul',
-              :descendant => {:tag => 'li',
-                :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+          assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']", false, "This page must not contain no following tag"
         end
 
         context "and module" do
@@ -307,20 +253,14 @@ class ProjectsControllerTest < ActionController::TestCase
             get :settings, :id => 1
             assert_response :success
             assert_template 'settings'
-            assert_tag :div, :attributes => {:class => 'tabs'},
-              :descendant => {:tag => 'ul',
-                :descendant => {:tag => 'li',
-                  :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+            assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']"
           end
 
           should "exist tag id post" do
             post :settings, :id => 1
             assert_response :success
             assert_template 'settings'
-            assert_tag :div, :attributes => {:class => 'tabs'},
-              :descendant => {:tag => 'ul',
-                :descendant => {:tag => 'li',
-                  :descendant => {:tag => 'a', :attributes => {:id => 'tab-issue_extensions'}}}}
+            assert_select "div[class='tabs'] ul li a[id='tab-issue_extensions']"
           end
         end
       end
