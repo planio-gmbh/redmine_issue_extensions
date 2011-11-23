@@ -44,7 +44,8 @@ if IssueExtensionsUtil.is_enabled?(project) -%><%
     </fieldset>
   </div>
   <div id="issue_extensions_relations">
-    <p><%= link_to l(:label_add_relation_issue), {:controller => 'issues', :action => 'new', :project_id => @issue.project_id, :relation_issue => issue.id}, :class => 'icon icon-edit' %></p>
+    <p><%= link_to l(:label_add_relation_issue), {:controller => 'issues', :action => 'new', :project_id => @issue.project_id, :relation_issue => issue.id}, :class => 'icon icon-edit' %><br />
+    <%= link_to l(:label_add_duplicate_issue), {:controller => 'issues', :action => 'new', :project_id => @issue.project_id, :copy_from => @issue, :duplicate_issue => "t"}, :class => 'icon icon-duplicate' %></p>
   </div>
 </div><%
 end %>

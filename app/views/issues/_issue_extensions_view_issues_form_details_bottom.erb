@@ -36,6 +36,25 @@ if IssueExtensionsUtil.is_enabled?(project) -%><%
         }
       }
     }
+    function onload_duplicate_issue() {
+      var get = new Array();
+      /* duplicate_issue要素検索 */
+      if (location.search.length > 1) {
+        var strings = location.search;
+        var requests = strings.substr(1).split("&");
+        for (var i = 0; i < requests.length; i++) {
+          var r = requests[i].split("=");
+          get[r[0]] = r[1];
+        }
+        if (get['duplicate_issue']){
+          /* 値クリア */
+          document.getElementById("issue_start_date").value = "";
+          document.getElementById("issue_due_date").value = "";
+          document.getElementById("issue_done_ratio").value = "0";
+        }
+      }
+    }
+    window.onload = onload_duplicate_issue();
   </script>
 </div><%
 end %>

@@ -7,6 +7,8 @@ en:
   field_old_status: Alpha
   field_new_status: Beta
 
+  label_add_duplicate_issue: Add duplicated this issue
+
   label_add_relation: Add related
   label_add_relation_issue: Add related this issue
   label_searched_issues: Searched issues

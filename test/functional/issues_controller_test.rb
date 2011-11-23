@@ -64,7 +64,10 @@ class IssuesControllerTest < ActionController::TestCase
                    :subject => 'This is the test_new issue',
                    :description => 'This is the description',
                    :priority_id => 4,
-                   :estimated_hours => ''}
+                   :estimated_hours => '',
+                   :start_date => Date.today,
+                   :due_date => (Date.today + 1),
+                   :done_ratio => 0}
     end
   end
 
@@ -102,23 +105,40 @@ class IssuesControllerTest < ActionController::TestCase
             end
           end
         end
-      end
 
-      should "accept get" do
-        get :new, :project_id => 1
-        assert_response :success
-        assert_template 'new.rhtml'
-        assert_select "div.issue_extensions_form", false
-      end
+        should "accept post" do
+          post :new, :project_id => 1,
+            :issue => {:tracker_id => 3,
+                   :status_id => 1,
+                   :subject => 'This is the test_new issue',
+                   :description => 'This is the description',
+                   :priority_id => 4,
+                   :estimated_hours => '',
+                   :start_date => Date.today,
+                   :due_date => (Date.today + 1),
+                   :done_ratio => 0}
+          assert_response :success
+          assert_template 'new.rhtml'
+          assert_select "input[id='issue_start_date']"
+          assert_select "input[id='issue_due_date']"
+          assert_select "select[id='issue_done_ratio']"
+        end
 
-      context "with relation issue" do
         should "accept get" do
-          a_issue
-          get :new, :project_id => 1,
-            :relation_issue => Issue.last.id
+          get :new, :project_id => 1
           assert_response :success
           assert_template 'new.rhtml'
           assert_select "div.issue_extensions_form", false
+        end
+
+        context "with relation issue" do
+          should "accept get" do
+            a_issue
+            get :new, :project_id => 1,
+              :relation_issue => Issue.last.id
+            assert_response :success
+            assert_template 'new.rhtml'
+            assert_select "div.issue_extensions_form", false
         end
       end
     end

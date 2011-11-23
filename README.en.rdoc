@@ -16,6 +16,8 @@ This is a plugin for Redmine
 
 6. When the issue is created and edited, assigned to oneself by clicking [Assigned to oneself] button.
 
+7. The duplicating issues can be easily made.
+
 === Plugin installation
 
 1. Copy the plugin directory into the vendor/plugins directory
