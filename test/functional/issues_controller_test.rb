@@ -139,6 +139,7 @@ class IssuesControllerTest < ActionController::TestCase
             assert_response :success
             assert_template 'new.rhtml'
             assert_select "div.issue_extensions_form", false
+          end
         end
       end
     end
