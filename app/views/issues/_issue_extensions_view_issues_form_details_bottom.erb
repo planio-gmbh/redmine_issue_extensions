@@ -48,9 +48,10 @@ if IssueExtensionsUtil.is_enabled?(project) -%><%
         }
         if (get['duplicate_issue']){
           /* 値クリア */
+          document.getElementById("issue_status_id").selectedIndex = 0;
           document.getElementById("issue_start_date").value = "";
           document.getElementById("issue_due_date").value = "";
-          document.getElementById("issue_done_ratio").value = "0";
+          document.getElementById("issue_done_ratio").selectedIndex = 0;
         }
       }
     }
