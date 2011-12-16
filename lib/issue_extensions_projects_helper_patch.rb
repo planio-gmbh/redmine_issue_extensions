@@ -34,4 +34,3 @@ module ProjectsHelperMethodsIssueExtensions
     tabs
   end
 end
-ProjectsHelper.send(:include, IssueExtensionsProjectsHelperPatch)

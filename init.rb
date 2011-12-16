@@ -31,3 +31,9 @@ Redmine::Plugin.register :redmine_issue_extensions do
     permission :manage_issue_extensions, {:issue_extensions_settings => [:show, :update]}, :require => :member
   end
 end
+
+Dispatcher.to_prepare do
+  ProjectsHelper.send(:include, IssueExtensionsProjectsHelperPatch) unless ProjectsHelper < IssueExtensionsProjectsHelperPatch
+  Issue.send(:include, IssueExtensionsIssuePatch) unless Issue < IssueExtensionsIssuePatch
+  
+end

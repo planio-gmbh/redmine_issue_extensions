@@ -45,4 +45,3 @@ module IssueExtensionsIssuePatch
     end
   end
 end
-Issue.send(:include, IssueExtensionsIssuePatch)
