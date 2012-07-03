@@ -16,5 +16,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 ActionController::Routing::Routes.draw do |map|
-  map.connect 'issue_extensions/:action', :controller => 'issue_extensions_settings'
+  map.connect 'issue_extensions/:action', :controller => 'issue_extensions'
+  map.connect 'issue_extensions_settings/:action', :controller => 'issue_extensions_settings'
+  map.connect 'issue_relations/:action', :controller => 'issue_relations'
 end
