@@ -1,6 +1,6 @@
 <%
 # Issue Extensions plugin for Redmine
-# Copyright (C) 2010  Takashi Takebayashi
+# Copyright (C) 2010-2012  Takashi Takebayashi
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -35,7 +35,7 @@ if IssueExtensionsUtil.is_enabled?(project) -%><%
     unless @issue.id == searched_issue.id %>
         <li id="issue_<%= searched_issue.id %>" class="draggable"><div class="tooltip"><%=
       link_to_remote image_tag('edit.png') + l(:label_add_relation), {
-        :url => {:controller => 'issue_relations', :action => 'new', :issue_id => @issue, :id => @issue.id, :relation => {:relation_type => 'relates', :issue_to_id => searched_issue.id}},
+        :url => {:controller => 'issue_relations', :action => 'create', :issue_id => @issue, :id => @issue.id, :relation => {:relation_type => 'relates', :issue_to_id => searched_issue.id}},
         :method => :post
       }, :title => l(:label_add_relation) %><%= link_to_issue searched_issue %><span class="tip"><%= render_issue_tooltip searched_issue %></span></div></li><%
     end
