@@ -34,4 +34,8 @@
 
 === 注意
 
-1. 本プラグインは、Redmine 0.9.0 以降、production mode(config.cache_classes = true)でのみ動作します。
+1. 本プラグインは、Redmine 2.0.0 以降、production mode(config.cache_classes = true)でのみ動作します。
+
+=== 言語フィイルを提供してくれた方々
+
+* ko.yml - Ki Won Kim
