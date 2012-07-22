@@ -1,6 +1,6 @@
 <%
 # Issue Extensions plugin for Redmine
-# Copyright (C) 2010  Takashi Takebayashi
+# Copyright (C) 2010-2012  Takashi Takebayashi
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -20,11 +20,11 @@
 <%
 @issue_extension_status_flow = IssueExtensionsStatusFlow.find_or_create(@project.id, User.current.id)
 @statuses = IssueStatus.find(:all, :order => 'position') %>
-<% labelled_tabular_form_for :setting, @issue_extension_status_flow,
+<%= labelled_form_for :setting, @issue_extension_status_flow,
                              :url => {:controller => 'issue_extensions_settings',
-                             :action => 'update', :id => @project, :tab => 'issue_extensions',
-                             :partial => 'issue_extensions_settings/update',
-                             :setting_id => @issue_extension_status_flow.id} do |f| %>
+                               :action => 'update', :id => @project, :tab => 'issue_extensions',
+                               :partial => 'issue_extensions_settings/update',
+                               :setting_id => @issue_extension_status_flow.id} do |f| %>
     <%= error_messages_for 'issue_extensions_setting' %>
     <div class="box">
       <b><%= h l(:text_changed_from_the_alpha_to_the_beta) %></b>
