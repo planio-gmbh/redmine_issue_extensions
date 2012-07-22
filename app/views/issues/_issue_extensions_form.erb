@@ -25,7 +25,7 @@ if IssueExtensionsUtil.is_enabled?(project) -%><%
 <div id="issue_extensions_form">
   <p><strong><%= l(:issue_extensions) %></strong></p>
   <div id="issue_extensions_search">
-    <% form_tag({:controller => 'issues', :action => 'show', :id => @issue.id}, :method => :get) do %>
+    <%= form_tag({:controller => 'issues', :action => 'show', :id => @issue.id}, :method => :get) do %>
       <%= l(:field_subject) %>:<%= text_field_tag "cb_subject", cb_subject, :size => 30 %>
       <%= submit_tag l(:button_apply) %>
     <% end %>
