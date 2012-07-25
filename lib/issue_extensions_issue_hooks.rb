@@ -14,7 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 class IssueExtensionsIssueHooks < Redmine::Hook::Listener
+# TODO: 新規作成の際も動作できないか調査が必要
 #  def controller_issues_new_before_save(context)
 #    issue = context[:issue]
 #    project = Project.find(issue[:project_id].to_i)
@@ -82,6 +84,7 @@ class IssueExtensionsIssueHooks < Redmine::Hook::Listener
   # チケットを更新した場合、更新者をウォッチャーに追加する
   def issue_added_watcher context
     issue = context[:issue]
+    # TODO: journal がなくなった影響で動作しなくなっているので、調査が必要
     journal = context[:journal]
 
     if Watcher.find :first, :conditions =>["watchable_type = (?) and watchable_id = (?) and user_id = (?)", journal[:journalized_type], issue[:id].to_i, journal[:user_id].to_i] == nil

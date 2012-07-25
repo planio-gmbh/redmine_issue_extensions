@@ -16,7 +16,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 require 'redmine'
 require 'issue_extensions_issue_hooks'
-require 'issue_extensions_issue_patch'
 require 'issue_extensions_projects_helper_patch'
 
 Redmine::Plugin.register :redmine_issue_extensions do
@@ -24,8 +23,8 @@ Redmine::Plugin.register :redmine_issue_extensions do
   author 'Takashi Takebayashi'
   url "http://www.r-labs.org/projects/issueext" if respond_to?(:url)
   description 'This is a Issue Extensions plugin for Redmine'
-  version '0.2.0'
-  requires_redmine :version_or_higher => '1.4.0'
+  version '0.2.0.1'
+  requires_redmine :version_or_higher => '2.0.0'
 
   project_module :issue_extensions do
     permission :manage_issue_extensions, {:issue_extensions_settings => [:show, :update]}, :require => :member
