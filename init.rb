@@ -1,5 +1,5 @@
 # Issue Extensions plugin for Redmine
-# Copyright (C) 2010  Takashi Takebayashi
+# Copyright (C) 2010-2012  Takashi Takebayashi
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,10 +22,10 @@ require 'issue_extensions_projects_helper_patch'
 Redmine::Plugin.register :redmine_issue_extensions do
   name 'Redmine Issue Extensions plugin'
   author 'Takashi Takebayashi'
-  url "http://www.r-labs.org/projects/show/issueext" if respond_to?(:url)
+  url "http://www.r-labs.org/projects/issueext" if respond_to?(:url)
   description 'This is a Issue Extensions plugin for Redmine'
-  version '0.0.8.1'
-  requires_redmine :version_or_higher => '0.9.0'
+  version '0.1.0'
+  requires_redmine :version_or_higher => '1.4.0'
 
   project_module :issue_extensions do
     permission :manage_issue_extensions, {:issue_extensions_settings => [:show, :update]}, :require => :member
