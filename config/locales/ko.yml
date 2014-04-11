@@ -1,0 +1,20 @@
+# Translation by Ki Won Kim (http://xyz37.blog.me, xyz37@naver.com)
+ko:
+  issue_extensions: "확장 일감"
+
+  button_assigned_to_oneself: "자신에게 할당"
+
+  field_old_status: 알파
+  field_new_status: 베타
+
+  label_add_duplicate_issue: "이 일감에 중복 추가"
+
+  label_add_relation: "연결 추가"
+  label_add_relation_issue: "이 일감에 연결 추가"
+  label_searched_issues: "검색된 일감"
+
+  permission_manage_issue_extensions: "확장 일감 관리"
+
+  project_module_issue_extensions: "확장 일감"
+
+  text_changed_from_the_alpha_to_the_beta: "담당자가 할당되면 자동으로 [ 알파 ] 에서 [ 베타 ] 상태로 변경됩니다."
