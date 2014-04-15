@@ -15,37 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-if IssueExtensionsUtil.is_enabled?(project) -%><%
-  parameters = request.parameters
-  cb_subject = parameters[:cb_subject]
-  cb_subject = "" unless cb_subject
-  searched_issues = nil
-  searched_issues = Issue.find(:all, :conditions => ["project_id = ? AND subject LIKE (?)", @issue.project_id, '%' + cb_subject + '%']) unless cb_subject == "" %>
+
+if IssueExtensionsUtil.is_enabled?(project) -%>
 <hr />
-<div id="issue_extensions_form">
-  <p><strong><%= l(:issue_extensions) %></strong></p>
-  <div id="issue_extensions_search">
-    <%= form_tag({:controller => 'issues', :action => 'show', :id => @issue.id}, :method => :get) do %>
-      <%= l(:field_subject) %>:<%= text_field_tag "cb_subject", cb_subject, :size => 30 %>
-      <%= submit_tag l(:button_apply) %>
-    <% end %>
-    <fieldset class="searched-issues" inner-droppableid="searched-issues"><legend><%= l(:label_searched_issues) %></legend>
-      <ul id="ul_searched-issues" class="inner-droppable"><%
-  searched_issues.each do |searched_issue|
-    unless @issue.id == searched_issue.id %>
-        <li id="issue_<%= searched_issue.id %>" class="draggable"><div class="tooltip"><%=
-      link_to_remote image_tag('edit.png') + l(:label_add_relation), {
-        :url => {:controller => 'issue_relations', :action => 'create', :issue_id => @issue, :id => @issue.id, :relation => {:relation_type => 'relates', :issue_to_id => searched_issue.id}},
-        :method => :post
-      }, :title => l(:label_add_relation) %><%= link_to_issue searched_issue %><span class="tip"><%= render_issue_tooltip searched_issue %></span></div></li><%
-    end
-  end unless searched_issues == nil %>
-      </ul>
-    </fieldset>
-  </div>
   <div id="issue_extensions_relations">
     <p><%= link_to l(:label_add_relation_issue), {:controller => 'issues', :action => 'new', :project_id => @issue.project_id, :relation_issue => issue.id}, :class => 'icon icon-edit' %><br />
     <%= link_to l(:label_add_duplicate_issue), {:controller => 'issues', :action => 'new', :project_id => @issue.project_id, :copy_from => @issue, :duplicate_issue => "t"}, :class => 'icon icon-duplicate' %></p>
   </div>
-</div><%
-end %>
+<% end %>
