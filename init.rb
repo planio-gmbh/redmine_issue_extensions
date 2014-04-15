@@ -14,9 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-require 'redmine'
 require 'issue_extensions_issue_hooks'
-require 'issue_extensions_issue_patch'
+#require 'issue_extensions_issue_patch'
 require 'issue_extensions_projects_helper_patch'
 
 Redmine::Plugin.register :redmine_issue_extensions do
@@ -32,8 +31,10 @@ Redmine::Plugin.register :redmine_issue_extensions do
   end
 end
 
-Dispatcher.to_prepare do
+Rails.configuration.to_prepare do
+  require_dependency 'projects_helper'
   ProjectsHelper.send(:include, IssueExtensionsProjectsHelperPatch) unless ProjectsHelper < IssueExtensionsProjectsHelperPatch
-  Issue.send(:include, IssueExtensionsIssuePatch) unless Issue < IssueExtensionsIssuePatch
+  #require_dependency 'issue'
+  #Issue.send(:include, IssueExtensionsIssuePatch) unless Issue < IssueExtensionsIssuePatch
   
 end

@@ -27,7 +27,7 @@ if IssueExtensionsUtil.is_enabled?(project) -%><%
     function selectOneself() {
       // プルダウンオブジェクトを取得する
       var options = document.getElementById('issue_assigned_to_id');
-      var oneself_value = '<%= User.current.id %>'
+      var oneself_value = '<%= User.current.id %>';
       for (var i = 0; i < options.length; i++){
         var options_value = options[i].value;
         if (oneself_value == options_value) {
