@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 require 'issue_extensions_issue_hooks'
 
 Redmine::Plugin.register :redmine_issue_extensions do
@@ -21,8 +22,8 @@ Redmine::Plugin.register :redmine_issue_extensions do
   author 'Takashi Takebayashi'
   url "http://www.r-labs.org/projects/issueext" if respond_to?(:url)
   description 'This is a Issue Extensions plugin for Redmine'
-  version '0.2.0.1'
-  requires_redmine :version_or_higher => '2.0.0'
+  version '0.3.0'
+  requires_redmine version_or_higher: '3.2.0'
 
   project_module :issue_extensions do
     permission :manage_issue_extensions, {:issue_extensions_settings => [:show, :update]}, :require => :member
