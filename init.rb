@@ -31,5 +31,4 @@ end
 
 Rails.configuration.to_prepare do
   ProjectsHelper.send(:include, IssueExtensionsProjectsHelperPatch) unless ProjectsHelper < IssueExtensionsProjectsHelperPatch
-  
 end
