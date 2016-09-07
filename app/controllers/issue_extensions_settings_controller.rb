@@ -15,12 +15,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class IssueExtensionsSettingsController < ApplicationController
-  # A copy of ApplicationController has been removed from the module tree but is still active!対策
-  unloadable
   # アクションが呼ばれる前に呼ぶメソッド
-  before_filter :find_project, :find_user, :authorize
+  before_filter :authorize
 
   def update
+    @user = User.current
     @issue_extension_status_flow = IssueExtensionsStatusFlow.find_or_create(@project.id, @user.id)
     @issue_extension_status_flow.attributes = params[:setting]
     @issue_extension_status_flow.updated_by = @user.id
@@ -29,15 +28,4 @@ class IssueExtensionsSettingsController < ApplicationController
     redirect_to :controller => 'projects', :action => "settings", :id => @project, :tab => 'issue_extensions'
   end
 
-  private
-  # プロジェクト情報を取得する。
-  # タブ消滅対策
-  def find_project
-    @project = Project.find(params[:id])
-  end
-
-  # ユーザ情報を取得する。
-  def find_user
-    @user = User.current
-  end
 end
