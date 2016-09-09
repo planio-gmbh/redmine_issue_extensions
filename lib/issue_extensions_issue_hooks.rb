@@ -60,7 +60,7 @@ class IssueExtensionsIssueHooks < Redmine::Hook::Listener
   # チケットに担当者が設定されている && 状態が新規の場合、担当に変更する
   def issue_status_assigned context
     issue = context[:issue]
-    issue_status = IssueExtensionsStatusFlow.find :first, :conditions => ['project_id = ?', issue[:project_id].to_i]
+    issue_status = IssueExtensionsStatusFlow.where(project_id: issue[:project_id].to_i).first
 
     if issue_status.old_status_id == issue[:status_id]
         issue[:status_id] = issue_status.new_status_id
@@ -71,7 +71,7 @@ class IssueExtensionsIssueHooks < Redmine::Hook::Listener
   # チケットがクローズされている場合、進捗を100%に変更する
   def issue_status_closed context
     issue = context[:issue]
-    issue_status_closed = IssueStatus.find :all, :conditions => ["is_closed = (?)", true]
+    issue_status_closed = IssueStatus.where(is_closed: true).to_a
 
     issue_status_closed.each {|closed|
       if closed.id == issue[:status_id].to_i && issue[:done_ratio] != 100
@@ -87,7 +87,11 @@ class IssueExtensionsIssueHooks < Redmine::Hook::Listener
     # TODO: journal がなくなった影響で動作しなくなっているので、調査が必要
     journal = context[:journal]
 
-    if Watcher.find :first, :conditions =>["watchable_type = (?) and watchable_id = (?) and user_id = (?)", journal[:journalized_type], issue[:id].to_i, journal[:user_id].to_i] == nil
+    if Watcher.where("watchable_type = (?) and watchable_id = (?) and user_id = (?)",
+                     journal[:journalized_type],
+                     issue[:id].to_i,
+                     journal[:user_id].to_i).none?
+
         hash_watcher = HashWithIndifferentAccess.new
         hash_watcher[:user_id]  = journal[:user_id].to_s
         watcher = Watcher.new(hash_watcher)
@@ -101,8 +105,7 @@ class IssueExtensionsIssueHooks < Redmine::Hook::Listener
   def issue_added_relation context
     issue = context[:issue]
     params = context[:params]
-    from_issue = Issue.find :first, :conditions =>["id = (?)", params[:relation_issue_id].to_i]
-    unless from_issue == nil
+    if Issue.where(id: params[:relation_issue_id].to_i).any?
       relation = IssueRelation.new
       relation.relation_type = IssueRelation::TYPE_RELATES
       relation.issue_from_id = params[:relation_issue_id]

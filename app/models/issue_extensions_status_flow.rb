@@ -18,7 +18,7 @@ class IssueExtensionsStatusFlow < ActiveRecord::Base
   belongs_to :project
 
   def self.find_or_create project_id, user_id
-    status_flow = IssueExtensionsStatusFlow.find :first, :conditions => ['project_id = ?', project_id]
+    status_flow = IssueExtensionsStatusFlow.where(project_id: project_id).first
     unless status_flow
       status_flow = IssueExtensionsStatusFlow.new
       status_flow.project_id = project_id
