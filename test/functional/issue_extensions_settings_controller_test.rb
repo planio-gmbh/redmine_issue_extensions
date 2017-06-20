@@ -101,7 +101,7 @@ class IssueExtensionsSettingsControllerTest < ActionController::TestCase
         should "redirect post" do
           post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
           assert_response :redirect
-          issue_extensions_status_flow = IssueExtensionsStatusFlow.find :first, :conditions => 'project_id = 1'
+          issue_extensions_status_flow = IssueExtensionsStatusFlow.where(project_id: 1).first
           assert_equal 1, issue_extensions_status_flow.project_id
           assert_equal 1, issue_extensions_status_flow.old_status_id
           assert_equal 2, issue_extensions_status_flow.new_status_id
@@ -142,7 +142,7 @@ class IssueExtensionsSettingsControllerTest < ActionController::TestCase
         should "redirect post" do
           post :update, :id => 1, :setting => {:old_status_id => 1, :new_status_id => 2}
           assert_response :redirect
-          issue_extensions_status_flow = IssueExtensionsStatusFlow.find :first, :conditions => 'project_id = 1'
+          issue_extensions_status_flow = IssueExtensionsStatusFlow.where(project_id: 1).first
           assert_equal 1, issue_extensions_status_flow.project_id
           assert_equal 1, issue_extensions_status_flow.old_status_id
           assert_equal 2, issue_extensions_status_flow.new_status_id
